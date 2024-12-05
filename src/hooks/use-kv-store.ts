@@ -3,7 +3,7 @@ import { useAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import { stringify } from 'superjson';
 
-import { memoAtoms, TData, TKey } from './kvStoreAtoms';
+import { memoAtoms, TData, TKey } from '../store/kv-store-atoms';
 
 /**
  * A hook to get, set, and remove an async stored state.

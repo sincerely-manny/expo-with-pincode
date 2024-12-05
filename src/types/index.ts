@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
-import { MODE, STEP } from './constants';
+import { MODE, STEP } from '../constants';
 
 export type Config = {
   // Session timeout in milliseconds

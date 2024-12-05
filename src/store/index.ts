@@ -4,8 +4,8 @@ import {
     DEFAULT_PINCODE_LENGTH,
     DEFAULT_SESSION_TIMEOUT,
     STEP,
-} from './constants';
-import { Config, PincodeScreenStep, PincodeState } from './types';
+} from '../constants';
+import { Config, PincodeScreenStep, PincodeState } from '../types';
 
 const authStore = createStore();
 

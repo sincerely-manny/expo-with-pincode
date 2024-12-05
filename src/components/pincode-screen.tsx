@@ -3,6 +3,8 @@ import { useCallback, useMemo, useRef } from 'react';
 import { View } from 'react-native';
 
 import { MODE, STEP } from '../constants';
+import { useKvStore } from '../hooks/use-kv-store';
+import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import {
     configAtom,
     cursorAtom,
@@ -17,8 +19,6 @@ import {
     PincodeScreenProps,
     PincodeState,
 } from '../types';
-import { useKvStore } from '../useKvStore';
-import { useLocalAuthentication } from '../useLocalAuthentication';
 
 export function PincodeScreen({
   className,

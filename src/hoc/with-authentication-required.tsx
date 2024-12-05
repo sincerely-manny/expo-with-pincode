@@ -4,9 +4,9 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { authMutexAtom, configAtom } from './store';
-import { PincodeScreenComponent } from './types';
-import { useLocalAuthentication } from './useLocalAuthentication';
+import { useLocalAuthentication } from '../hooks/use-local-authentication';
+import { authMutexAtom, configAtom } from '../store';
+import { PincodeScreenComponent } from '../types';
 
 /**
  * A higher-order component that wraps a component and requires the user to be authenticated.

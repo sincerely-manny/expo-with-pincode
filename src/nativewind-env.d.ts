@@ -1,12 +1,12 @@
 import {
-  ScrollViewProps,
-  ScrollViewPropsAndroid,
-  ScrollViewPropsIOS,
-  Touchable,
-  VirtualizedListProps,
-} from "react-native";
+    ScrollViewProps,
+    ScrollViewPropsAndroid,
+    ScrollViewPropsIOS,
+    Touchable,
+    VirtualizedListProps,
+} from 'react-native';
 
-declare module "@react-native/virtualized-lists" {
+declare module '@react-native/virtualized-lists' {
   // eslint-disable-next-line
   export interface VirtualizedListWithoutRenderItemProps<ItemT>
     extends ScrollViewProps {
@@ -15,7 +15,7 @@ declare module "@react-native/virtualized-lists" {
   }
 }
 
-declare module "react-native" {
+declare module 'react-native' {
   interface ScrollViewProps
     extends ViewProps,
       ScrollViewPropsIOS,

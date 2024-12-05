@@ -1,16 +1,16 @@
-import * as LocalAuthentication from "expo-local-authentication";
-import * as SecureStore from "expo-secure-store";
-import { useAtom, useAtomValue } from "jotai";
-import { useCallback, useEffect, useState } from "react";
+import * as LocalAuthentication from 'expo-local-authentication';
+import * as SecureStore from 'expo-secure-store';
+import { useAtom, useAtomValue } from 'jotai';
+import { useCallback, useEffect, useState } from 'react';
 
-import { PINCODE_SECURE_KEY } from "./constants";
+import { PINCODE_SECURE_KEY } from '../constants';
 import {
-  authMutexAtom,
-  isAuthenticatedAtom,
-  isPincodeSetAtom,
-  sessionValidTillAtom,
-  sessoionTimeoutAtom,
-} from "./store";
+    authMutexAtom,
+    isAuthenticatedAtom,
+    isPincodeSetAtom,
+    sessionValidTillAtom,
+    sessoionTimeoutAtom,
+} from '../store';
 
 /**
  * Hook to use local authentication.
@@ -76,8 +76,8 @@ export function useLocalAuthentication() {
 
   const authenticateWithBiometrics = useCallback(async () => {
     const authenticated = await LocalAuthentication.authenticateAsync({
-      promptMessage: "Authenticate",
-      cancelLabel: "Cancel",
+      promptMessage: 'Authenticate',
+      cancelLabel: 'Cancel',
       disableDeviceFallback: true,
     });
     if (authenticated.success) {
@@ -99,7 +99,7 @@ export function useLocalAuthentication() {
       }
       return false;
     },
-    [setIsAuthenticated],
+    [setIsAuthenticated]
   );
 
   const setPincode = useCallback(
@@ -110,10 +110,10 @@ export function useLocalAuthentication() {
         });
         setIsPincodeSet(true);
       } catch (error) {
-        console.error("Error setting pincode", error);
+        console.error('Error setting pincode', error);
       }
     },
-    [setIsPincodeSet],
+    [setIsPincodeSet]
   );
 
   const clearPincode = useCallback(async () => {
@@ -124,7 +124,7 @@ export function useLocalAuthentication() {
       setIsPincodeSet(false);
       setIsAuthenticated(false);
     } catch (error) {
-      console.error("Error clearing pincode", error);
+      console.error('Error clearing pincode', error);
     }
   }, [setIsAuthenticated, setIsPincodeSet]);
 
