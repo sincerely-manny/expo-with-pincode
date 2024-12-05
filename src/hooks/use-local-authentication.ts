@@ -4,13 +4,14 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 
 import { PINCODE_SECURE_KEY } from '../constants';
+// prettier-ignore
 import {
     authMutexAtom,
     isAuthenticatedAtom,
     isPincodeSetAtom,
     sessionValidTillAtom,
     sessoionTimeoutAtom,
-} from '../store';
+} from '../store/auth';
 
 /**
  * Hook to use local authentication.
@@ -58,6 +59,7 @@ export function useLocalAuthentication() {
       clearSessionWithMutex();
     }, t);
     setSessionTimeout(timeout);
+    // eslint-disable-next-line
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionValidTill, isAuthenticated, authMutex]);
 

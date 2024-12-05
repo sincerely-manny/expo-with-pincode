@@ -13,3 +13,13 @@ export const STEP = {
   enter: 'enter',
   confirm: 'confirm',
 } as const;
+
+export const MESSAGES = {
+  create: 'Create your PIN',
+  confirm: 'Confirm your PIN',
+  check: 'Enter your PIN',
+  reset: 'Enter old PIN to reset it',
+  correct: 'PIN is correct',
+  incorrect: 'Incorrect  PIN',
+  set: 'PIN is set',
+};

@@ -1,6 +1,8 @@
 import { Link } from 'expo-router';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useLocalAuthentication } from 'expo-with-pincode';
+import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
 export default function App() {
+  const { setPincode } = useLocalAuthentication();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
@@ -8,6 +10,9 @@ export default function App() {
           <Link href="/protected" style={styles.link}>
             Go to protected content ➡️
           </Link>
+        </Group>
+        <Group name="">
+          <Button title="Set pin to 1234" onPress={() => setPincode('1234')} />
         </Group>
       </ScrollView>
     </SafeAreaView>

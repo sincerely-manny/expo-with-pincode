@@ -1,19 +1,31 @@
-import { PropsWithChildren } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import { FC, PropsWithRef } from 'react';
+import { ViewProps } from 'react-native';
 
-import { MODE, STEP } from '../constants';
+import { MESSAGES, MODE, STEP } from '../constants';
 
 export type Config = {
-  // Session timeout in milliseconds
+  // Session timeout in milliseconds, default - 1 minute
   sessionTimeout: number;
-  // Pincode length
+  // Pincode length, default - 4
   pincodeLength: number;
-  // Pincode screen component
-  pincodeScreen?: PincodeScreenComponent | null;
+  // Enter pincode screen, default - null
+  AuthScreen?: FC;
+  // Set pincode screen, default - null
+  SetPinScreen?: FC;
+  // Require set pincode if not set, default - false
+  requireSetPincode: boolean;
+  // Callback on successful authentication
+  onSuccessfulAuth?: () => void;
+  // Callback on failed authentication
+  onFailedAuth?: () => void;
+  // Messages for different modes
+  messages: PincodeScreenMessages;
 };
 
 export type PicodeScreenMode = keyof typeof MODE;
 export type PincodeScreenStep = keyof typeof STEP;
+export type PincodeScreenMessage = keyof typeof MESSAGES;
+export type PincodeScreenMessages = typeof MESSAGES;
 
 export function isPincodeScreenModeGuard(
   value: string
@@ -34,9 +46,6 @@ export type PincodeState<L extends number = 4> = {
 
 export type PincodeScreenProps = {
   mode: PicodeScreenMode;
-  onSuccessfulAuth?: () => void;
-  className?: string;
-  style?: StyleProp<ViewStyle>;
-} & PropsWithChildren;
+} & PropsWithRef<ViewProps>;
 
 export type PincodeScreenComponent = React.ComponentType<PincodeScreenProps>;
