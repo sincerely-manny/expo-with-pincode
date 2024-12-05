@@ -1,4 +1,4 @@
-import { withAuthenticationRequired } from 'expo-with-pincode/withAuthenticationRequired';
+import { withAuthenticationRequired } from 'expo-with-pincode';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 function ProtectedScreen() {
