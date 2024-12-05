@@ -28,16 +28,39 @@
   "author": "Kirill Serebryannyy <sincerely.manny@gmail.com> (sincerely-manny)",
   "license": "MIT",
   "homepage": "https://github.com/sincerely-manny/expo-with-pincode#readme",
-  "dependencies": {},
   "devDependencies": {
     "@types/react": "~18.3.12",
     "expo-module-scripts": "^4.0.2",
     "expo": "~52.0.0",
-    "react-native": "0.76.0"
+    "react-native": "0.76.0",
+
+    "@tanstack/eslint-plugin-query": "^5.62.1",
+    "eslint-config-expo": "^8.0.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-tailwindcss": "^3.17.5",
+    "eslint-plugin-unicorn": "^56.0.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+
+    "expo-local-authentication": "*",
+    "expo-router": "*",
+    "expo-secure-store": "*",
+    "expo-sqlite": "*",
+    "jotai": "*",
+    "superjson": "*"
   },
   "peerDependencies": {
     "expo": "*",
+    "expo-local-authentication": "*",
+    "expo-router": "*",
+    "expo-secure-store": "*",
+    "expo-sqlite": "*",
+    "jotai": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "superjson": "*"
   }
 }

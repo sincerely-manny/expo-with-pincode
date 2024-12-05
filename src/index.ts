@@ -1,5 +1,12 @@
-// Reexport the native module. On web, it will be resolved to ExpoWithPincodeModule.web.ts
-// and on native platforms to ExpoWithPincodeModule.ts
-export { default } from './ExpoWithPincodeModule';
-export { default as ExpoWithPincodeView } from './ExpoWithPincodeView';
-export * from  './ExpoWithPincode.types';
+import { PincodeScreen } from './components/PincodeScreen';
+import { useLocalAuthentication } from './useLocalAuthentication';
+import { withAuthenticationRequired } from './withAuthenticationRequired';
+export type * as ExpoWithPincodeType from './types';
+
+const ExpoWithPincode = {
+  useLocalAuthentication,
+  withAuthenticationRequired,
+  PincodeScreen,
+};
+
+export default ExpoWithPincode;
