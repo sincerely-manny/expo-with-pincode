@@ -1,11 +1,17 @@
+import { PincodeInputField } from './components/pincode-input-field';
 import { PincodeScreen } from './components/pincode-screen';
+import { PinpadButton } from './components/pinpad-button';
 import { withAuthenticationRequired } from './hoc/with-authentication-required';
 import { useLocalAuthentication } from './hooks/use-local-authentication';
+import { usePinpadStateMessage } from './hooks/use-pinpad-state-message';
 import { useSetConfig } from './hooks/use-set-config';
 
+export { PincodeInputField } from './components/pincode-input-field';
 export { PincodeScreen } from './components/pincode-screen';
+export { PinpadButton } from './components/pinpad-button';
 export { withAuthenticationRequired } from './hoc/with-authentication-required';
 export { useLocalAuthentication } from './hooks/use-local-authentication';
+export { usePinpadStateMessage } from './hooks/use-pinpad-state-message';
 export { useSetConfig } from './hooks/use-set-config';
 export type * as ExpoWithPincodeType from './types';
 
@@ -14,4 +20,7 @@ export default {
   useSetConfig,
   withAuthenticationRequired,
   PincodeScreen,
+  PincodeInputField,
+  PinpadButton,
+  usePinpadStateMessage,
 };

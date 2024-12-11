@@ -1,7 +1,7 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
-import { useAtom, useAtomValue } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { PINCODE_SECURE_KEY } from '../constants';
 // prettier-ignore
@@ -12,6 +12,15 @@ import {
     sessionValidTillAtom,
     sessoionTimeoutAtom,
 } from '../store/auth';
+import {
+    cursorAtom,
+    errorAtom,
+    inputAtom,
+    successAtom,
+} from '../store/component-state';
+import { configAtom } from '../store/config';
+import { PincodeState } from '../types';
+import { useKvStore } from './use-kv-store';
 
 /**
  * Hook to use local authentication.
@@ -40,6 +49,16 @@ export function useLocalAuthentication() {
   const authMutex = useAtomValue(authMutexAtom);
   const [sessionTimeout, setSessionTimeout] = useAtom(sessoionTimeoutAtom);
   const sessionValidTill = useAtomValue(sessionValidTillAtom);
+
+  const setInput = useSetAtom(inputAtom);
+  const setCursor = useSetAtom(cursorAtom);
+  const setError = useSetAtom(errorAtom);
+  const setSuccess = useSetAtom(successAtom);
+
+  const [isFaceIDEnabled] = useKvStore('USE_FACE_ID_ENABLED');
+
+  const { pincodeLength, onFailedAuth, onSuccessfulAuth, submitTimeout } =
+    useAtomValue(configAtom);
 
   const clearSessionWithMutex = useCallback(() => {
     if (authMutex) {
@@ -76,6 +95,8 @@ export function useLocalAuthentication() {
     })();
   }, [setIsPincodeSet]);
 
+  // MARK: - Authencitation methods
+
   const authenticateWithBiometrics = useCallback(async () => {
     const authenticated = await LocalAuthentication.authenticateAsync({
       promptMessage: 'Authenticate',
@@ -104,6 +125,8 @@ export function useLocalAuthentication() {
     [setIsAuthenticated]
   );
 
+  // MARK: - Pincode methods
+
   const setPincode = useCallback(
     async (pincode: string) => {
       try {
@@ -130,6 +153,51 @@ export function useLocalAuthentication() {
     }
   }, [setIsAuthenticated, setIsPincodeSet]);
 
+  // MARK: - Pinpad
+
+  const INITIAL_STATE = useMemo<PincodeState<typeof pincodeLength>>(
+    () => ({
+      input: Array(pincodeLength).fill(null) as PincodeState<
+        typeof pincodeLength
+      >['input'],
+      cursor: 0,
+    }),
+    [pincodeLength]
+  );
+
+  // MARK: - Handle auth success and failure
+
+  const reset = useCallback(() => {
+    setInput(INITIAL_STATE.input as unknown as PincodeState['input']);
+    setCursor(INITIAL_STATE.cursor);
+    setError(false);
+    setSuccess(false);
+  }, [
+    setInput,
+    INITIAL_STATE.input,
+    INITIAL_STATE.cursor,
+    setCursor,
+    setError,
+    setSuccess,
+  ]);
+
+  const resetWithTimeout = useCallback(() => {
+    setTimeout(reset, submitTimeout);
+  }, [reset, submitTimeout]);
+
+  const handleAuthSuccess = useCallback(async () => {
+    setSuccess(true);
+    onSuccessfulAuth && onSuccessfulAuth();
+  }, [onSuccessfulAuth, setSuccess]);
+
+  const handleAuthFailure = useCallback(() => {
+    setError(true);
+    onFailedAuth && onFailedAuth();
+    resetWithTimeout();
+  }, [setError, onFailedAuth, resetWithTimeout]);
+
+  // MARK: - Return
+
   return {
     isAuthenticated,
     isBiometricAvailable:
@@ -139,5 +207,10 @@ export function useLocalAuthentication() {
     setPincode,
     clearPincode,
     isPincodeSet,
+    PIN_INPUT_INITIAL_STATE: INITIAL_STATE,
+    isFaceIDEnabled,
+    handleAuthSuccess,
+    handleAuthFailure,
+    resetInput: reset,
   };
 }

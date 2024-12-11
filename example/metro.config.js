@@ -14,8 +14,8 @@ const config = getDefaultConfig(__dirname);
 // ];
 
 config.resolver.nodeModulesPaths = [
-  // path.resolve(__dirname, './node_modules'),
-  path.resolve(__dirname, '../node_modules'),
+  path.resolve(__dirname, './node_modules'),
+  // path.resolve(__dirname, '../node_modules'),
 ];
 
 config.resolver.extraNodeModules = {

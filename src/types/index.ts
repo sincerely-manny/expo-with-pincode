@@ -1,7 +1,7 @@
 import { FC, PropsWithRef } from 'react';
 import { ViewProps } from 'react-native';
 
-import { MESSAGES, MODE, STEP } from '../constants';
+import { MESSAGES, MODE, PINPAD, PINPAD_LAYOUT, STEP } from '../constants';
 
 export type Config = {
   // Session timeout in milliseconds, default - 1 minute
@@ -20,12 +20,17 @@ export type Config = {
   onFailedAuth?: () => void;
   // Messages for different modes
   messages: PincodeScreenMessages;
+  // Timeout after successful submit or error in milliseconds, default - 2000
+  submitTimeout: number;
+  // Sumbit after last input, default - true
+  submitAfterLastInput: boolean;
 };
 
 export type PicodeScreenMode = keyof typeof MODE;
 export type PincodeScreenStep = keyof typeof STEP;
-export type PincodeScreenMessage = keyof typeof MESSAGES;
 export type PincodeScreenMessages = typeof MESSAGES;
+export type PinpadLayout = typeof PINPAD_LAYOUT;
+export type PinpadValue = (typeof PINPAD)[keyof typeof PINPAD];
 
 export function isPincodeScreenModeGuard(
   value: string
