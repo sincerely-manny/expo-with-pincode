@@ -1,11 +1,16 @@
 // import { PincodeScreen } from "../screen/pincode";
 import { useFocusEffect } from 'expo-router';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { ComponentType, PropsWithoutRef } from 'react';
-import { forwardRef } from 'react';
+import { forwardRef, useCallback, useEffect } from 'react';
 
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
-import { authMutexAtom } from '../store/auth';
+import {
+  authMutexAtom,
+  isAuthenticatedAtom,
+  sessionValidTillAtom,
+  sessoionTimeoutAtom,
+} from '../store/auth';
 import { configAtom } from '../store/config';
 
 /**
@@ -21,6 +26,7 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
 ) {
   const WithAuthenticationRequired = forwardRef<unknown, P>(
     function WithAuthenticationRequired(props, ref) {
+      useAuthRenewalInterval();
       const { isAuthenticated, isPincodeSet } = useLocalAuthentication();
       const setAuthMutex = useSetAtom(authMutexAtom);
       const { AuthScreen, SetPinScreen, requireSetPincode } =
@@ -50,4 +56,40 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
     }
   );
   return WithAuthenticationRequired;
+}
+
+function useAuthRenewalInterval() {
+  const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
+  const authMutex = useAtomValue(authMutexAtom);
+  const setSessionTimeout = useSetAtom(sessoionTimeoutAtom);
+  const sessionValidTill = useAtomValue(sessionValidTillAtom);
+
+  const clearSessionWithMutex = useCallback(() => {
+    if (authMutex) {
+      setIsAuthenticated(true);
+      return;
+    }
+    setIsAuthenticated(false);
+  }, [authMutex, setIsAuthenticated]);
+
+  useEffect(() => {
+    setSessionTimeout((prevTimeout) => {
+      prevTimeout && clearTimeout(prevTimeout);
+      if (!isAuthenticated || !sessionValidTill) {
+        return null;
+      }
+      const t = sessionValidTill.getTime() - Date.now();
+      const timeout = setTimeout(() => {
+        clearSessionWithMutex();
+      }, t);
+      return timeout;
+    });
+  }, [
+    sessionValidTill,
+    isAuthenticated,
+    authMutex,
+    setSessionTimeout,
+    clearSessionWithMutex,
+  ]);
+  return null;
 }

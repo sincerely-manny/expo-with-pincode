@@ -1,8 +1,8 @@
 import {
-  PincodeInputField,
-  PincodeScreen,
-  PinpadButton,
-  usePinpadStateMessage,
+    PincodeInputField,
+    PincodeScreen,
+    PinpadButton,
+    usePinpadStateMessage,
 } from 'expo-with-pincode';
 import { Text, View } from 'react-native';
 
@@ -54,6 +54,7 @@ export function PincodeAuthScreen() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
+              key={v}
             >
               <Text>{v}</Text>
             </PinpadButton>

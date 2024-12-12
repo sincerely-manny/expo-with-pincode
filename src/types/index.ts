@@ -3,26 +3,33 @@ import { ViewProps } from 'react-native';
 
 import { MESSAGES, MODE, PINPAD, PINPAD_LAYOUT, STEP } from '../constants';
 
+/**
+ * Configuration object for the Pincode feature.
+ *
+ * This type defines the structure of the configuration object used to customize
+ * the behavior of the pincode functionality, including timeouts, screens, and callbacks.
+ *
+ * @property {number} sessionTimeout - Session timeout in milliseconds (default: 60000).
+ * @property {number} pincodeLength - Length of the pincode (default: 4).
+ * @property {React.FC} [AuthScreen] - Component for the "Enter Pincode" screen (default: null).
+ * @property {React.FC} [SetPinScreen] - Component for the "Set Pincode" screen (default: null).
+ * @property {boolean} requireSetPincode - Whether setting a pincode is required (default: false).
+ * @property {() => void} [onSuccessfulAuth] - Callback invoked after successful authentication.
+ * @property {() => void} [onFailedAuth] - Callback invoked after failed authentication.
+ * @property {PincodeScreenMessages} messages - Messages displayed for various modes.
+ * @property {number} submitTimeout - Timeout after successful submit or error in milliseconds (default: 2000).
+ * @property {boolean} submitAfterLastInput - Automatically submit after the last input (default: true).
+ */
 export type Config = {
-  // Session timeout in milliseconds, default - 1 minute
   sessionTimeout: number;
-  // Pincode length, default - 4
   pincodeLength: number;
-  // Enter pincode screen, default - null
   AuthScreen?: FC;
-  // Set pincode screen, default - null
   SetPinScreen?: FC;
-  // Require set pincode if not set, default - false
   requireSetPincode: boolean;
-  // Callback on successful authentication
   onSuccessfulAuth?: () => void;
-  // Callback on failed authentication
   onFailedAuth?: () => void;
-  // Messages for different modes
   messages: PincodeScreenMessages;
-  // Timeout after successful submit or error in milliseconds, default - 2000
   submitTimeout: number;
-  // Sumbit after last input, default - true
   submitAfterLastInput: boolean;
 };
 

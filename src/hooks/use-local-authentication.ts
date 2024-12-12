@@ -38,8 +38,7 @@ import { useKvStore } from './use-kv-store';
  * - `clearPincode`: Function to clear the pincode.
  * - `isPincodeSet`: Boolean indicating if a pincode is set.
  *
- * To protect a screen, use `withAuthenticationRequired` HOC from `@/components/hoc/withAuthenticationRequired`.
- * If not applicable, use `forceAuthenticate` to redirect to the pincode screen, passing the target href as a parameter.
+ * To protect a screen, use `withAuthenticationRequired` HOC.
  */
 export function useLocalAuthentication() {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
@@ -188,7 +187,8 @@ export function useLocalAuthentication() {
   const handleAuthSuccess = useCallback(async () => {
     setSuccess(true);
     onSuccessfulAuth && onSuccessfulAuth();
-  }, [onSuccessfulAuth, setSuccess]);
+    resetWithTimeout();
+  }, [onSuccessfulAuth, resetWithTimeout, setSuccess]);
 
   const handleAuthFailure = useCallback(() => {
     setError(true);
