@@ -52,7 +52,6 @@
   },
   "peerDependencies": {
     "expo": "*",
-    "expo-linking": "*",
     "expo-local-authentication": "*",
     "expo-router": "*",
     "expo-secure-store": "*",

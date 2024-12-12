@@ -24,7 +24,7 @@ import { PincodeState } from '../types';
 import { useKvStore } from './use-kv-store';
 
 /**
- * Hook to use local authentication.
+ * Hook to use for local authentication.
  * Use this hook to authenticate the user using biometrics or pincode.
  * @returns Object with the following properties:
  * - `isAuthenticated`: Boolean indicating if the user is authenticated and session is valid.
@@ -38,6 +38,15 @@ import { useKvStore } from './use-kv-store';
  * - `setPincode`: Function to set a pincode.
  * - `clearPincode`: Function to clear the pincode.
  * - `isPincodeSet`: Boolean indicating if a pincode is set.
+ * - `PIN_INPUT_INITIAL_STATE`: Initial state for the pin input.
+ * - `isFaceIDEnabled`: Boolean indicating if Face ID is enabled.
+ * - `setFaceIDEnabled`: Function to enable Face ID.
+ * - `handleAuthSuccess`: Function to handle successful authentication.
+ * - `handleAuthFailure`: Function to handle failed authentication.
+ * - `resetInput`: Function to reset the pin input.
+ * - `submitCheck`: Function to submit the pin input for checking.
+ * - `submitSet`: Function to submit the pin input for setting (creating, both pincode and confirmation).
+ * - `submitReset`: Function to submit the pin input for resetting (deleting).
  *
  * To protect a screen, use `withAuthenticationRequired` HOC.
  */

@@ -39,7 +39,7 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
         };
       });
 
-      if (!AuthScreen || !SetPinScreen) {
+      if (!AuthScreen || (!SetPinScreen && requireSetPincode)) {
         throw new Error(
           'AuthScreen and SetPinScreen must be set in the config'
         );
@@ -48,7 +48,7 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
       if (!isAuthenticated) {
         if (isPincodeSet) {
           return <AuthScreen />;
-        } else if (requireSetPincode) {
+        } else if (requireSetPincode && SetPinScreen) {
           return <SetPinScreen />;
         }
       }

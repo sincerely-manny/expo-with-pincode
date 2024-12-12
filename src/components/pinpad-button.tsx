@@ -1,22 +1,22 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { forwardRef, useCallback, useMemo } from 'react';
+import { forwardRef, PropsWithRef, useCallback, useMemo } from 'react';
 import { Pressable, PressableProps, View } from 'react-native';
 
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import {
-  cursorAtom,
-  errorAtom,
-  inputAtom,
-  loadingAtom,
-  modeAtom,
-  successAtom,
+    cursorAtom,
+    errorAtom,
+    inputAtom,
+    loadingAtom,
+    modeAtom,
+    successAtom,
 } from '../store/component-state';
 import { configAtom } from '../store/config';
 import { PincodeState, PinpadValue } from '../types';
 
 type PinpadButtonProps = {
   value: PinpadValue;
-} & PressableProps;
+} & PropsWithRef<PressableProps>;
 
 export const PinpadButton = forwardRef<View, PinpadButtonProps>(
   function PinpadButton({ onPress, value, ...props }, ref) {

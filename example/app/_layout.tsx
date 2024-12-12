@@ -9,7 +9,6 @@ export default function RootLayout() {
   const setPinConfig = useSetConfig();
   useEffect(() => {
     setPinConfig({
-      requireSetPincode: true,
       SetPinScreen: PincodeSetScreen,
       AuthScreen: PincodeAuthScreen,
     });

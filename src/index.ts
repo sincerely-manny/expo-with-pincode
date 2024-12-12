@@ -18,9 +18,9 @@ export type * as ExpoWithPincodeType from './types';
 export default {
   useLocalAuthentication,
   useSetConfig,
+  usePinpadStateMessage,
   withAuthenticationRequired,
   PincodeScreen,
   PincodeInputField,
   PinpadButton,
-  usePinpadStateMessage,
 };
