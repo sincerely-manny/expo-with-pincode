@@ -1,67 +1,108 @@
-// prettier-ignore
-// prettier-ignore
 import { useAtomValue, useSetAtom } from 'jotai';
-import { forwardRef, useCallback, useEffect } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { View } from 'react-native';
 
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
-import { inputAtom, messageAtom } from '../store/component-state';
+import {
+  errorAtom,
+  inputAtom,
+  messageAtom,
+  modeAtom,
+  stepAtom,
+  successAtom,
+} from '../store/component-state';
 import { configAtom } from '../store/config';
 import { isPincodeScreenModeGuard, PincodeScreenProps } from '../types';
 
 export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
   function PincodeScreen(
-    { children, mode, ...props }: PincodeScreenProps,
+    {
+      children,
+      mode,
+      onSuccessfulSetPincode,
+      onSuccessfulResetPincode,
+      ...props
+    }: PincodeScreenProps,
     ref
   ) {
     if (!mode || !isPincodeScreenModeGuard(mode)) {
       throw new Error('Invalid pincode screen mode');
     }
 
+    const success = useAtomValue(successAtom);
+    const error = useAtomValue(errorAtom);
+    const step = useAtomValue(stepAtom);
+    const setMode = useSetAtom(modeAtom);
+    useEffect(() => {
+      setMode(mode);
+    }, [mode, setMode]);
+
     const input = useAtomValue(inputAtom);
-    const { submitAfterLastInput, submitTimeout, messages } =
-      useAtomValue(configAtom);
+    const { submitAfterLastInput, messages } = useAtomValue(configAtom);
     const setMessage = useSetAtom(messageAtom);
 
-    const { authenticateWithPincode, handleAuthFailure, handleAuthSuccess } =
-      useLocalAuthentication();
+    const { submitCheck, submitSet, submitReset } = useLocalAuthentication();
 
-    const submitCheck = useCallback(() => {
-      authenticateWithPincode(input.join(''), {
-        delayAfterSuccess: submitTimeout,
-      }).then((success) => {
-        if (success) {
-          setMessage(messages.correct);
-          handleAuthSuccess();
-        } else {
-          setMessage(messages.incorrect);
-          handleAuthFailure();
-        }
-      });
-    }, [
-      authenticateWithPincode,
-      handleAuthFailure,
-      handleAuthSuccess,
-      input,
-      messages.correct,
-      messages.incorrect,
-      setMessage,
-      submitTimeout,
-    ]);
+    // MARK: - Auto-submit after last input
 
     useEffect(() => {
       if (submitAfterLastInput && input.every((i) => i !== null)) {
         if (mode === 'check') {
           submitCheck();
+        } else if (mode === 'create') {
+          submitSet(onSuccessfulSetPincode);
+        } else if (mode === 'reset') {
+          submitReset(onSuccessfulResetPincode);
         }
       }
-    }, [input, mode, submitCheck, submitAfterLastInput]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [input, mode]);
+
+    // MARK: - Message handling
 
     useEffect(() => {
-      if (mode === 'check' && input.every((i) => i === null)) {
+      if (success) {
+        if (mode === 'check') {
+          setMessage(messages.correct);
+        } else if (mode === 'create') {
+          setMessage(messages.set);
+        } else if (mode === 'reset') {
+          setMessage(messages.isreset);
+        }
+      } else if (error) {
+        if (mode === 'check' || mode === 'reset') {
+          setMessage(messages.incorrect);
+        } else if (mode === 'create') {
+          setMessage(messages.nomatch);
+        }
+      } else if (mode === 'check' && input.every((i) => i === null)) {
         setMessage(messages.check);
+      } else if (mode === 'create' && input.every((i) => i === null)) {
+        if (step === 'enter') {
+          setMessage(messages.create);
+        } else if (step === 'confirm') {
+          setMessage(messages.confirm);
+        }
+      } else if (mode === 'reset' && input.every((i) => i === null)) {
+        setMessage(messages.reset);
       }
-    }, [input, mode, messages.check, setMessage]);
+    }, [
+      input,
+      mode,
+      messages.check,
+      setMessage,
+      messages.create,
+      messages.confirm,
+      step,
+      success,
+      error,
+      messages.correct,
+      messages.incorrect,
+      messages.nomatch,
+      messages.set,
+      messages.isreset,
+      messages.reset,
+    ]);
 
     return (
       <View {...props} ref={ref}>

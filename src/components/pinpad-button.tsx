@@ -8,6 +8,7 @@ import {
   errorAtom,
   inputAtom,
   loadingAtom,
+  modeAtom,
   successAtom,
 } from '../store/component-state';
 import { configAtom } from '../store/config';
@@ -19,30 +20,32 @@ type PinpadButtonProps = {
 
 export const PinpadButton = forwardRef<View, PinpadButtonProps>(
   function PinpadButton({ onPress, value, ...props }, ref) {
-    const [input, setInput] = useAtom(inputAtom);
+    const setInput = useSetAtom(inputAtom);
     const [cursor, setCursor] = useAtom(cursorAtom);
 
-    const { pincodeLength, submitTimeout } = useAtomValue(configAtom);
+    const { pincodeLength } = useAtomValue(configAtom);
 
-    const setLoading = useSetAtom(loadingAtom);
+    const [loading, setLoading] = useAtom(loadingAtom);
     const error = useAtomValue(errorAtom);
     const success = useAtomValue(successAtom);
+    const mode = useAtomValue(modeAtom);
 
     const disabled = useMemo(() => {
       if (props.disabled !== undefined) {
         return props.disabled;
       }
-      return success || error;
-    }, [error, props.disabled, success]);
+      return success || error || loading;
+    }, [error, loading, props.disabled, success]);
 
     const {
       isBiometricAvailable,
       authenticateWithBiometrics,
-      authenticateWithPincode,
       isFaceIDEnabled,
       handleAuthSuccess,
       handleAuthFailure,
       resetInput,
+      submitSet,
+      submitCheck,
     } = useLocalAuthentication();
 
     const handleBiometricAuth = useCallback(async () => {
@@ -85,9 +88,11 @@ export const PinpadButton = forwardRef<View, PinpadButtonProps>(
             resetInput();
             break;
           case 'submit':
-            authenticateWithPincode(input.join(''), {
-              delayAfterSuccess: submitTimeout,
-            });
+            if (mode === 'create') {
+              submitSet();
+            } else if (mode === 'check') {
+              submitCheck();
+            }
             break;
           default:
             if (cursor < pincodeLength) {
@@ -102,17 +107,17 @@ export const PinpadButton = forwardRef<View, PinpadButtonProps>(
         }
       },
       [
-        authenticateWithPincode,
         cursor,
         handleBiometricAuth,
-        input,
         isBiometricAvailable,
         isFaceIDEnabled,
+        mode,
         pincodeLength,
         resetInput,
         setCursor,
         setInput,
-        submitTimeout,
+        submitCheck,
+        submitSet,
       ]
     );
     return (

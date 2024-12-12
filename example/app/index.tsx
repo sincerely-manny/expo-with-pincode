@@ -10,6 +10,9 @@ export default function App() {
           <Link href="/protected" style={styles.link}>
             Go to protected content ➡️
           </Link>
+          <Link href="/set" style={styles.link}>
+            Go to set/reset pincode ➡️
+          </Link>
         </Group>
         <Group name="">
           <Button title="Set pin to 1234" onPress={() => setPincode('1234')} />

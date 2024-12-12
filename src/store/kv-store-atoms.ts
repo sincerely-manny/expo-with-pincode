@@ -3,8 +3,8 @@ import { atom, PrimitiveAtom } from 'jotai';
 import { parse } from 'superjson';
 
 const AsyncStorageDefault = {
-  USE_PASSCODE_ENABLED: false,
-  USE_FACE_ID_ENABLED: false,
+  USE_PASSCODE_ENABLED: true,
+  USE_FACE_ID_ENABLED: true,
 } as const;
 
 export type TKey = keyof typeof AsyncStorageDefault;

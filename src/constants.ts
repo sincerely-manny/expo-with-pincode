@@ -18,11 +18,13 @@ export const STEP = {
 export const MESSAGES = {
   create: 'Create your PIN',
   confirm: 'Confirm your PIN',
+  set: 'PIN is set',
+  nomatch: 'PINs do not match',
   check: 'Enter your PIN',
-  reset: 'Enter old PIN to reset it',
   correct: 'PIN is correct',
   incorrect: 'Incorrect  PIN',
-  set: 'PIN is set',
+  reset: 'Enter old PIN to reset it',
+  isreset: 'PIN is reset',
 };
 
 export const PINPAD_LAYOUT = [

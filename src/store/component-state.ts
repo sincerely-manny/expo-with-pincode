@@ -1,9 +1,10 @@
 import { atom } from 'jotai';
 
 // prettier-ignore
-import { MESSAGES, STEP } from '../constants';
+import { MESSAGES, MODE, STEP } from '../constants';
 // prettier-ignore
 import {
+    PicodeScreenMode,
     PincodeScreenStep,
     PincodeState,
 } from '../types';
@@ -15,3 +16,4 @@ export const errorAtom = atom(false);
 export const successAtom = atom(false);
 export const loadingAtom = atom(false);
 export const messageAtom = atom(MESSAGES.check);
+export const modeAtom = atom<PicodeScreenMode>(MODE.check);

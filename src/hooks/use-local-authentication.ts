@@ -1,22 +1,23 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { PINCODE_SECURE_KEY } from '../constants';
 // prettier-ignore
 import {
-    authMutexAtom,
-    isAuthenticatedAtom,
-    isPincodeSetAtom,
-    sessionValidTillAtom,
-    sessoionTimeoutAtom,
+  authMutexAtom,
+  isAuthenticatedAtom,
+  isPincodeSetAtom,
+  sessionValidTillAtom,
+  sessoionTimeoutAtom,
 } from '../store/auth';
 import {
-    cursorAtom,
-    errorAtom,
-    inputAtom,
-    successAtom,
+  cursorAtom,
+  errorAtom,
+  inputAtom,
+  stepAtom,
+  successAtom,
 } from '../store/component-state';
 import { configAtom } from '../store/config';
 import { PincodeState } from '../types';
@@ -49,12 +50,13 @@ export function useLocalAuthentication() {
   const [sessionTimeout, setSessionTimeout] = useAtom(sessoionTimeoutAtom);
   const sessionValidTill = useAtomValue(sessionValidTillAtom);
 
-  const setInput = useSetAtom(inputAtom);
+  const [input, setInput] = useAtom(inputAtom);
   const setCursor = useSetAtom(cursorAtom);
   const setError = useSetAtom(errorAtom);
   const setSuccess = useSetAtom(successAtom);
+  const setStep = useSetAtom(stepAtom);
 
-  const [isFaceIDEnabled] = useKvStore('USE_FACE_ID_ENABLED');
+  const [isFaceIDEnabled, setFaceIDEnabled] = useKvStore('USE_FACE_ID_ENABLED');
 
   const { pincodeLength, onFailedAuth, onSuccessfulAuth, submitTimeout } =
     useAtomValue(configAtom);
@@ -171,6 +173,7 @@ export function useLocalAuthentication() {
     setCursor(INITIAL_STATE.cursor);
     setError(false);
     setSuccess(false);
+    setStep('enter');
   }, [
     setInput,
     INITIAL_STATE.input,
@@ -178,11 +181,18 @@ export function useLocalAuthentication() {
     setCursor,
     setError,
     setSuccess,
+    setStep,
   ]);
 
-  const resetWithTimeout = useCallback(() => {
-    setTimeout(reset, submitTimeout);
-  }, [reset, submitTimeout]);
+  const resetWithTimeout = useCallback(
+    (callback?: () => void) => {
+      setTimeout(() => {
+        reset();
+        callback && callback();
+      }, submitTimeout);
+    },
+    [reset, submitTimeout]
+  );
 
   const handleAuthSuccess = useCallback(async () => {
     setSuccess(true);
@@ -195,6 +205,97 @@ export function useLocalAuthentication() {
     onFailedAuth && onFailedAuth();
     resetWithTimeout();
   }, [setError, onFailedAuth, resetWithTimeout]);
+
+  // MARK: - Submission
+
+  const submitCheck = useCallback(async () => {
+    const success = await authenticateWithPincode(input.join(''), {
+      delayAfterSuccess: submitTimeout,
+    });
+    if (success) {
+      setSuccess(true);
+      setError(false);
+      handleAuthSuccess();
+    } else {
+      setError(true);
+      setSuccess(false);
+      handleAuthFailure();
+    }
+  }, [
+    authenticateWithPincode,
+    handleAuthFailure,
+    handleAuthSuccess,
+    input,
+    setError,
+    setSuccess,
+    submitTimeout,
+  ]);
+
+  const confirmationRef = useRef<string | null>(null);
+
+  const submitSet = useCallback(
+    async (onSuccessCallback?: () => void) => {
+      if (confirmationRef.current === null) {
+        confirmationRef.current = input.join('');
+        setInput(INITIAL_STATE.input as unknown as PincodeState['input']);
+        setCursor(INITIAL_STATE.cursor);
+        setStep('confirm');
+        return;
+      }
+      if (confirmationRef.current === input.join('')) {
+        await setPincode(confirmationRef.current);
+        setSuccess(true);
+        setError(false);
+        // onSuccessfulAuth && onSuccessfulAuth();
+        resetWithTimeout(onSuccessCallback);
+      } else {
+        setSuccess(false);
+        setError(true);
+        // onFailedAuth && onFailedAuth();
+        resetWithTimeout();
+      }
+      confirmationRef.current = null;
+    },
+    [
+      INITIAL_STATE.cursor,
+      INITIAL_STATE.input,
+      input,
+      resetWithTimeout,
+      setCursor,
+      setError,
+      setInput,
+      setPincode,
+      setStep,
+      setSuccess,
+    ]
+  );
+
+  const submitReset = useCallback(
+    async (onSuccessCallback?: () => void) => {
+      const success = await authenticateWithPincode(input.join(''), {
+        delayAfterSuccess: submitTimeout,
+      });
+      if (success) {
+        await clearPincode();
+        setSuccess(true);
+        setError(false);
+        resetWithTimeout(onSuccessCallback);
+      } else {
+        setError(true);
+        setSuccess(false);
+        resetWithTimeout();
+      }
+    },
+    [
+      authenticateWithPincode,
+      clearPincode,
+      input,
+      resetWithTimeout,
+      setError,
+      setSuccess,
+      submitTimeout,
+    ]
+  );
 
   // MARK: - Return
 
@@ -209,8 +310,12 @@ export function useLocalAuthentication() {
     isPincodeSet,
     PIN_INPUT_INITIAL_STATE: INITIAL_STATE,
     isFaceIDEnabled,
+    setFaceIDEnabled,
     handleAuthSuccess,
     handleAuthFailure,
     resetInput: reset,
+    submitCheck,
+    submitSet,
+    submitReset,
   };
 }

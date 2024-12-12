@@ -1,8 +1,8 @@
 import {
-    PincodeInputField,
-    PincodeScreen,
-    PinpadButton,
-    usePinpadStateMessage,
+  PincodeInputField,
+  PincodeScreen,
+  PinpadButton,
+  usePinpadStateMessage,
 } from 'expo-with-pincode';
 import { Text, View } from 'react-native';
 

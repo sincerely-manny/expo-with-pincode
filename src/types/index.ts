@@ -58,6 +58,8 @@ export type PincodeState<L extends number = 4> = {
 
 export type PincodeScreenProps = {
   mode: PicodeScreenMode;
+  onSuccessfulSetPincode?: () => void;
+  onSuccessfulResetPincode?: () => void;
 } & PropsWithRef<ViewProps>;
 
 export type PincodeScreenComponent = React.ComponentType<PincodeScreenProps>;
