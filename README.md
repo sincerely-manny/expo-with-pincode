@@ -146,9 +146,16 @@ Hook that sets the configuration for the pincode screen.
 };
 ```
 
-## `usePinpadStateMessage()`
-A hook that returns a message to display on the pinpad screen.
-
+## `usePinInputState()`
+A hook that returns current pin input state:
+  * @returns Object with the following properties:
+  * - `input`: Array of numbers representing the pin input.
+  * - `cursor`: Number representing the cursor position.
+  * - `isFilled`: Boolean indicating if the input is filled.
+  * - `loading`: Boolean indicating if the input is loading.
+  * - `message`: String representing the state message.
+  * - `error`: Boolean indicating if the input is in error state.
+  * - `success`: Boolean indicating if the input is in success state.
 
 ## `withAuthenticationRequired(Component)`
 HOC that wraps a component with a pincode screen.
