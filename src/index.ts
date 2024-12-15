@@ -12,7 +12,6 @@ export { PinpadButton } from './components/pinpad-button';
 export { withAuthenticationRequired } from './hoc/with-authentication-required';
 export { useLocalAuthentication } from './hooks/use-local-authentication';
 export { usePinInputState } from './hooks/use-pin-input-state';
-export { usePinpadStateMessage } from './hooks/use-pinpad-state-message';
 export { useSetConfig } from './hooks/use-set-config';
 export type * as ExpoWithPincodeType from './types';
 

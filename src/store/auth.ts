@@ -1,5 +1,7 @@
+import * as SecureStore from 'expo-secure-store';
 import { atom, createStore } from 'jotai';
 
+import { PINCODE_SECURE_KEY } from '../constants';
 import { configAtom } from './config';
 
 const authStore = createStore();
@@ -9,6 +11,11 @@ export const sessoionTimeoutAtom = atom<null | ReturnType<typeof setTimeout>>(
   null
 );
 export const isPincodeSetAtom = atom(false);
+isPincodeSetAtom.onMount = (set) => {
+  SecureStore.getItemAsync(PINCODE_SECURE_KEY, {
+    keychainAccessible: SecureStore.WHEN_UNLOCKED,
+  }).then((pincode) => set(!!pincode));
+};
 
 export const isAuthenticatedAtom = atom(
   (get) => {

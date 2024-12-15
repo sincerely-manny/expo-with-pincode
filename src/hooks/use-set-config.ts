@@ -1,6 +1,7 @@
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 
+import { isPincodeSetAtom } from '../store/auth';
 import { configAtom } from '../store/config';
 import { Config } from '../types';
 
@@ -12,5 +13,6 @@ export function useSetConfig() {
     },
     [setAtom]
   );
+  useAtom(isPincodeSetAtom);
   return setConfigValue;
 }
