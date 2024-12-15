@@ -1,15 +1,15 @@
 // import { PincodeScreen } from "../screen/pincode";
 import { useFocusEffect } from 'expo-router';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback, useEffect } from 'react';
 
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import {
-  authMutexAtom,
-  isAuthenticatedAtom,
-  sessionValidTillAtom,
-  sessoionTimeoutAtom,
+    authMutexAtom,
+    isAuthenticatedAtom,
+    sessionValidTillAtom,
+    sessoionTimeoutAtom,
 } from '../store/auth';
 import { configAtom } from '../store/config';
 
@@ -20,7 +20,7 @@ import { configAtom } from '../store/config';
  * @param Component The component to wrap.
  * @returns The wrapped component.
  */
-
+const store = getDefaultStore();
 export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
   Component: ComponentType<PropsWithoutRef<P>>
 ) {
@@ -30,7 +30,7 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
       const { isAuthenticated, isPincodeSet } = useLocalAuthentication();
       const setAuthMutex = useSetAtom(authMutexAtom);
       const { AuthScreen, SetPinScreen, requireSetPincode } =
-        useAtomValue(configAtom);
+        store.get(configAtom);
 
       useFocusEffect(() => {
         setAuthMutex(true);
