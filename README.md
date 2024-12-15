@@ -54,13 +54,10 @@ import { PincodeAuthScreen } from '../components/pincode-auth-screen';
 import { PincodeSetScreen } from '../components/pincode-set-screen';
 
 export default function RootLayout() {
-  const setPinConfig = useSetConfig();
-  useEffect(() => {
-    setPinConfig({
-      AuthScreen: PincodeAuthScreen,
-      SetPinScreen: PincodeSetScreen,
-    });
-  }, [setPinConfig]);
+  useSetConfig({
+    AuthScreen: PincodeAuthScreen,
+    SetPinScreen: PincodeSetScreen,
+  });
   return <Stack />;
 }
 ```
