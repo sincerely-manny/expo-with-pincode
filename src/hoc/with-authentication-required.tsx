@@ -5,13 +5,9 @@ import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback, useEffect } from 'react';
 
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
-import {
-    authMutexAtom,
-    isAuthenticatedAtom,
-    sessionValidTillAtom,
-    sessoionTimeoutAtom,
-} from '../store/auth';
+import { authMutexAtom, isAuthenticatedAtom } from '../store/auth';
 import { configAtom } from '../store/config';
+import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
 
 /**
  * A higher-order component that wraps a component and requires the user to be authenticated.

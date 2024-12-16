@@ -6,20 +6,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PINCODE_SECURE_KEY } from '../constants';
 // prettier-ignore
 import {
-  authMutexAtom,
-  isAuthenticatedAtom,
-  isPincodeSetAtom,
-  sessionValidTillAtom,
-  sessoionTimeoutAtom,
+    authMutexAtom,
+    isAuthenticatedAtom,
+    isPincodeSetAtom,
 } from '../store/auth';
 import {
-  cursorAtom,
-  errorAtom,
-  inputAtom,
-  stepAtom,
-  successAtom,
+    cursorAtom,
+    errorAtom,
+    inputAtom,
+    stepAtom,
+    successAtom,
 } from '../store/component-state';
 import { configAtom } from '../store/config';
+import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
 import { PincodeState } from '../types';
 import { useKvStore } from './use-kv-store';
 
