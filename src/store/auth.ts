@@ -1,11 +1,11 @@
 import * as SecureStore from 'expo-secure-store';
-import { atom, getDefaultStore } from 'jotai';
+import { atom } from 'jotai';
 
+import { store } from '../components/pincode-store-provider';
 import { PINCODE_SECURE_KEY } from '../constants';
 import { configAtom } from './config';
 import { sessionValidTillAtom } from './session';
 
-const store = getDefaultStore();
 export const authMutexAtom = atom(false);
 
 export const isPincodeSetAtom = atom(false);

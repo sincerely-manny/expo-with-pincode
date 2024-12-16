@@ -1,6 +1,7 @@
-import { getDefaultStore, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 
+import { store } from '../components/pincode-store-provider';
 import { isPincodeSetAtom } from '../store/auth';
 import { configAtom } from '../store/config';
 import { Config } from '../types';
@@ -25,7 +26,6 @@ export function useSetConfig(config: Partial<Config>) {
   return currentConfig;
 }
 
-const store = getDefaultStore();
 export function setConfig(config: Partial<Config>) {
   const prev = store.get(configAtom);
   store.set(configAtom, { ...prev, ...config });

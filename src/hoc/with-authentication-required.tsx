@@ -1,9 +1,10 @@
 // import { PincodeScreen } from "../screen/pincode";
 import { useFocusEffect } from 'expo-router';
-import { getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback, useEffect } from 'react';
 
+import { store } from '../components/pincode-store-provider';
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import { authMutexAtom, isAuthenticatedAtom } from '../store/auth';
 import { configAtom } from '../store/config';
@@ -16,7 +17,6 @@ import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
  * @param Component The component to wrap.
  * @returns The wrapped component.
  */
-const store = getDefaultStore();
 export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
   Component: ComponentType<PropsWithoutRef<P>>
 ) {
