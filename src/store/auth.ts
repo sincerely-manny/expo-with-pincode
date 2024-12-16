@@ -25,9 +25,9 @@ export const isAuthenticatedAtom = atom(
     if (!isSessionValid) {
       return false;
     }
-    const { sessionTimeout } = store.get(configAtom);
-    const newExpiration = new Date(Date.now() + sessionTimeout);
-    store.set(sessionValidTillAtom, newExpiration);
+    // const { sessionTimeout } = store.get(configAtom);
+    // const newExpiration = new Date(Date.now() + sessionTimeout);
+    // store.set(sessionValidTillAtom, newExpiration);
     return true;
   },
   (get, set, newValue: boolean) => {
