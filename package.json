@@ -1,6 +1,6 @@
 {
   "name": "expo-with-pincode",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "HOC to protect a route with a pincode/FaceId",
   "main": "build/index.js",
   "types": "build/index.d.ts",

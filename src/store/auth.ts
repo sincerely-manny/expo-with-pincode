@@ -16,7 +16,8 @@ isPincodeSetAtom.onMount = (set) => {
 };
 
 export const isAuthenticatedAtomGet = atom((get) => {
-  const sessionValidTill = store.get(sessionValidTillAtom);
+  const sessionValidTill =
+    get(sessionValidTillAtom) || store.get(sessionValidTillAtom);
   const isSessionValid = !!sessionValidTill && sessionValidTill > new Date();
 
   if (!isSessionValid) {
@@ -36,8 +37,10 @@ export const isAuthenticatedAtomSet = atom(
     if (newValue) {
       const { sessionTimeout } = store.get(configAtom);
       store.set(sessionValidTillAtom, new Date(Date.now() + sessionTimeout));
+      set(sessionValidTillAtom, new Date(Date.now() + sessionTimeout));
     } else {
       store.set(sessionValidTillAtom, null);
+      set(sessionValidTillAtom, null);
     }
   }
 );
