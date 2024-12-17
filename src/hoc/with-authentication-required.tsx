@@ -1,12 +1,16 @@
 // import { PincodeScreen } from "../screen/pincode";
 import { useFocusEffect } from 'expo-router';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback, useEffect } from 'react';
 
 import { store } from '../components/pincode-store-provider';
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
-import { authMutexAtom, isAuthenticatedAtom } from '../store/auth';
+import {
+    authMutexAtom,
+    isAuthenticatedAtomGet,
+    isAuthenticatedAtomSet,
+} from '../store/auth';
 import { configAtom } from '../store/config';
 import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
 
@@ -24,7 +28,7 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
     function WithAuthenticationRequired(props, ref) {
       useAuthRenewalInterval();
       const { isPincodeSet } = useLocalAuthentication();
-      const isAuthenticated = useAtomValue(isAuthenticatedAtom);
+      const isAuthenticated = useAtomValue(isAuthenticatedAtomGet);
       const setAuthMutex = useSetAtom(authMutexAtom);
       const { AuthScreen, SetPinScreen, requireSetPincode } =
         store.get(configAtom);
@@ -56,7 +60,8 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
 }
 
 function useAuthRenewalInterval() {
-  const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet);
+  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet);
   const authMutex = useAtomValue(authMutexAtom);
   const setSessionTimeout = useSetAtom(sessoionTimeoutAtom);
   const sessionValidTill = useAtomValue(sessionValidTillAtom);

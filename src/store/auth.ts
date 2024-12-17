@@ -15,21 +15,23 @@ isPincodeSetAtom.onMount = (set) => {
   }).then((pincode) => set(!!pincode));
 };
 
-export const isAuthenticatedAtom = atom(
-  (get) => {
-    const sessionValidTill = store.get(sessionValidTillAtom);
-    const isSessionValid = !!sessionValidTill && sessionValidTill > new Date();
+export const isAuthenticatedAtomGet = atom((get) => {
+  const sessionValidTill = store.get(sessionValidTillAtom);
+  const isSessionValid = !!sessionValidTill && sessionValidTill > new Date();
 
-    if (!isSessionValid) {
-      return false;
-    }
-    const { sessionTimeout } = store.get(configAtom);
-    const newExpiration = new Date(Date.now() + sessionTimeout);
-    if (newExpiration.getTime() > sessionValidTill.getTime() + 1000) {
-      store.set(sessionValidTillAtom, newExpiration);
-    }
-    return true;
-  },
+  if (!isSessionValid) {
+    return false;
+  }
+  const { sessionTimeout } = store.get(configAtom);
+  const newExpiration = new Date(Date.now() + sessionTimeout);
+  if (newExpiration.getTime() > sessionValidTill.getTime() + 1000) {
+    store.set(sessionValidTillAtom, newExpiration);
+  }
+  return true;
+});
+
+export const isAuthenticatedAtomSet = atom(
+  null,
   (get, set, newValue: boolean) => {
     if (newValue) {
       const { sessionTimeout } = store.get(configAtom);

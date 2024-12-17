@@ -7,7 +7,8 @@ import { PINCODE_SECURE_KEY } from '../constants';
 // prettier-ignore
 import {
     authMutexAtom,
-    isAuthenticatedAtom,
+    isAuthenticatedAtomGet,
+    isAuthenticatedAtomSet,
     isPincodeSetAtom,
 } from '../store/auth';
 import {
@@ -53,7 +54,8 @@ export function useLocalAuthentication() {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [hasSavedBiometric, setHasSavedBiometric] = useState(false);
   const [isPincodeSet, setIsPincodeSet] = useAtom(isPincodeSetAtom);
-  const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet);
+  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet);
   const authMutex = useAtomValue(authMutexAtom);
   const [sessionTimeout, setSessionTimeout] = useAtom(sessoionTimeoutAtom);
   const sessionValidTill = useAtomValue(sessionValidTillAtom);
