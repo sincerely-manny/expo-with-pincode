@@ -23,7 +23,8 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
   const WithAuthenticationRequired = forwardRef<unknown, P>(
     function WithAuthenticationRequired(props, ref) {
       useAuthRenewalInterval();
-      const { isAuthenticated, isPincodeSet } = useLocalAuthentication();
+      const { isPincodeSet } = useLocalAuthentication();
+      const isAuthenticated = useAtomValue(isAuthenticatedAtom);
       const setAuthMutex = useSetAtom(authMutexAtom);
       const { AuthScreen, SetPinScreen, requireSetPincode } =
         store.get(configAtom);

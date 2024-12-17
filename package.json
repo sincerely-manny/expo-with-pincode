@@ -1,6 +1,6 @@
 {
   "name": "expo-with-pincode",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "HOC to protect a route with a pincode/FaceId",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -45,7 +45,7 @@
     "expo-router": "*",
     "expo-secure-store": "*",
     "expo-sqlite": "^15.0.3",
-    "jotai": "*",
+    "jotai": "^2.10.4",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "react-native": "0.76.0",
     "superjson": "*"
