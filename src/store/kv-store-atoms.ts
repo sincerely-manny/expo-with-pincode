@@ -5,7 +5,7 @@ import { parse } from 'superjson';
 const AsyncStorageDefault = {
   USE_PASSCODE_ENABLED: true,
   USE_FACE_ID_ENABLED: true,
-} as const;
+};
 
 export type TKey = keyof typeof AsyncStorageDefault;
 export type TData<K> = K extends TKey ? (typeof AsyncStorageDefault)[K] : never;
