@@ -36,5 +36,5 @@ export function useKvStore<K extends TKey>(key: K) {
     set(memoValue);
   }, [memoValue, set]);
 
-  return [memoValue, setMemoValue];
+  return [memoValue, setMemoValue] as const;
 }
