@@ -13,6 +13,7 @@ import {
 } from '../store/component-state';
 import { configAtom } from '../store/config';
 import { isPincodeScreenModeGuard, PincodeScreenProps } from '../types';
+import { store } from './pincode-store-provider';
 
 export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
   function PincodeScreen(
@@ -29,17 +30,17 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
       throw new Error('Invalid pincode screen mode');
     }
 
-    const success = useAtomValue(successAtom);
-    const error = useAtomValue(errorAtom);
-    const step = useAtomValue(stepAtom);
-    const setMode = useSetAtom(modeAtom);
+    const success = useAtomValue(successAtom, { store });
+    const error = useAtomValue(errorAtom, { store });
+    const step = useAtomValue(stepAtom, { store });
+    const setMode = useSetAtom(modeAtom, { store });
     useEffect(() => {
       setMode(mode);
     }, [mode, setMode]);
 
-    const input = useAtomValue(inputAtom);
-    const { submitAfterLastInput, messages } = useAtomValue(configAtom);
-    const setMessage = useSetAtom(messageAtom);
+    const input = useAtomValue(inputAtom, { store });
+    const { submitAfterLastInput, messages } = useAtomValue(configAtom, { store });
+    const setMessage = useSetAtom(messageAtom, { store });
 
     const { submitCheck, submitSet, submitReset } = useLocalAuthentication();
 

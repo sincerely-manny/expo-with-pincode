@@ -5,18 +5,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { PINCODE_SECURE_KEY } from '../constants';
 // prettier-ignore
+import { store } from '../components/pincode-store-provider';
 import {
-    authMutexAtom,
-    isAuthenticatedAtomGet,
-    isAuthenticatedAtomSet,
-    isPincodeSetAtom,
+  authMutexAtom,
+  isAuthenticatedAtomGet,
+  isAuthenticatedAtomSet,
+  isPincodeSetAtom,
 } from '../store/auth';
 import {
-    cursorAtom,
-    errorAtom,
-    inputAtom,
-    stepAtom,
-    successAtom,
+  cursorAtom,
+  errorAtom,
+  inputAtom,
+  stepAtom,
+  successAtom,
 } from '../store/component-state';
 import { configAtom } from '../store/config';
 import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
@@ -53,23 +54,23 @@ import { useKvStore } from './use-kv-store';
 export function useLocalAuthentication() {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [hasSavedBiometric, setHasSavedBiometric] = useState(false);
-  const [isPincodeSet, setIsPincodeSet] = useAtom(isPincodeSetAtom);
-  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet);
-  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet);
-  const authMutex = useAtomValue(authMutexAtom);
-  const [sessionTimeout, setSessionTimeout] = useAtom(sessoionTimeoutAtom);
-  const sessionValidTill = useAtomValue(sessionValidTillAtom);
+  const [isPincodeSet, setIsPincodeSet] = useAtom(isPincodeSetAtom, { store });
+  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet, { store });
+  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet, { store });
+  const authMutex = useAtomValue(authMutexAtom, { store });
+  const [sessionTimeout, setSessionTimeout] = useAtom(sessoionTimeoutAtom, { store });
+  const sessionValidTill = useAtomValue(sessionValidTillAtom, { store });
 
-  const [input, setInput] = useAtom(inputAtom);
-  const setCursor = useSetAtom(cursorAtom);
-  const setError = useSetAtom(errorAtom);
-  const setSuccess = useSetAtom(successAtom);
-  const setStep = useSetAtom(stepAtom);
+  const [input, setInput] = useAtom(inputAtom, { store });
+  const setCursor = useSetAtom(cursorAtom, { store });
+  const setError = useSetAtom(errorAtom, { store });
+  const setSuccess = useSetAtom(successAtom, { store });
+  const setStep = useSetAtom(stepAtom, { store });
 
   const [isFaceIDEnabled, setFaceIDEnabled] = useKvStore('USE_FACE_ID_ENABLED');
 
   const { pincodeLength, onFailedAuth, onSuccessfulAuth, submitTimeout } =
-    useAtomValue(configAtom);
+    useAtomValue(configAtom, { store });
 
   const clearSessionWithMutex = useCallback(() => {
     if (authMutex) {

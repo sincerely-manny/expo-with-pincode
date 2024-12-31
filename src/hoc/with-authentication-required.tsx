@@ -7,9 +7,9 @@ import { forwardRef, useCallback, useEffect } from 'react';
 import { store } from '../components/pincode-store-provider';
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import {
-    authMutexAtom,
-    isAuthenticatedAtomGet,
-    isAuthenticatedAtomSet,
+  authMutexAtom,
+  isAuthenticatedAtomGet,
+  isAuthenticatedAtomSet,
 } from '../store/auth';
 import { configAtom } from '../store/config';
 import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
@@ -28,8 +28,8 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
     function WithAuthenticationRequired(props, ref) {
       useAuthRenewalInterval();
       const { isPincodeSet } = useLocalAuthentication();
-      const isAuthenticated = useAtomValue(isAuthenticatedAtomGet);
-      const setAuthMutex = useSetAtom(authMutexAtom);
+      const isAuthenticated = useAtomValue(isAuthenticatedAtomGet, { store });
+      const setAuthMutex = useSetAtom(authMutexAtom, { store });
       const { AuthScreen, SetPinScreen, requireSetPincode } =
         store.get(configAtom);
 
@@ -60,11 +60,11 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
 }
 
 function useAuthRenewalInterval() {
-  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet);
-  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet);
-  const authMutex = useAtomValue(authMutexAtom);
-  const setSessionTimeout = useSetAtom(sessoionTimeoutAtom);
-  const sessionValidTill = useAtomValue(sessionValidTillAtom);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet, { store });
+  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet, { store });
+  const authMutex = useAtomValue(authMutexAtom, { store });
+  const setSessionTimeout = useSetAtom(sessoionTimeoutAtom, { store });
+  const sessionValidTill = useAtomValue(sessionValidTillAtom, { store });
 
   const clearSessionWithMutex = useCallback(() => {
     if (authMutex) {

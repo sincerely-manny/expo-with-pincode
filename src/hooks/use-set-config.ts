@@ -9,7 +9,7 @@ import { Config } from '../types';
 export function useSetConfig(config: Partial<Config>) {
   useAtom(isPincodeSetAtom);
   // const setAtom = useSetAtom(configAtom);
-  const [currentConfig, setAtom] = useAtom(configAtom);
+  const [currentConfig, setAtom] = useAtom(configAtom, { store });
   const setConfigValue = useCallback(
     (value: Partial<Config>) => {
       setAtom((prev) => ({ ...prev, ...value }));

@@ -4,15 +4,16 @@ import { Pressable, PressableProps, View } from 'react-native';
 
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import {
-    cursorAtom,
-    errorAtom,
-    inputAtom,
-    loadingAtom,
-    modeAtom,
-    successAtom,
+  cursorAtom,
+  errorAtom,
+  inputAtom,
+  loadingAtom,
+  modeAtom,
+  successAtom,
 } from '../store/component-state';
 import { configAtom } from '../store/config';
 import { PincodeState, PinpadValue } from '../types';
+import { store } from './pincode-store-provider';
 
 type PinpadButtonProps = {
   value: PinpadValue;
@@ -20,15 +21,15 @@ type PinpadButtonProps = {
 
 export const PinpadButton = forwardRef<View, PinpadButtonProps>(
   function PinpadButton({ onPress, value, ...props }, ref) {
-    const setInput = useSetAtom(inputAtom);
-    const [cursor, setCursor] = useAtom(cursorAtom);
+    const setInput = useSetAtom(inputAtom, { store });
+    const [cursor, setCursor] = useAtom(cursorAtom, { store });
 
-    const { pincodeLength } = useAtomValue(configAtom);
+    const { pincodeLength } = useAtomValue(configAtom, { store });
 
-    const [loading, setLoading] = useAtom(loadingAtom);
-    const error = useAtomValue(errorAtom);
-    const success = useAtomValue(successAtom);
-    const mode = useAtomValue(modeAtom);
+    const [loading, setLoading] = useAtom(loadingAtom, { store });
+    const error = useAtomValue(errorAtom, { store });
+    const success = useAtomValue(successAtom, { store });
+    const mode = useAtomValue(modeAtom, { store });
 
     const disabled = useMemo(() => {
       if (props.disabled !== undefined) {

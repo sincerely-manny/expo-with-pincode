@@ -3,6 +3,7 @@ import { FC, forwardRef, useEffect, useRef } from 'react';
 import { View, ViewProps } from 'react-native';
 
 import { inputAtom } from '../store/component-state';
+import { store } from './pincode-store-provider';
 
 type CharacterProps = {
   value?: number | null;
@@ -18,7 +19,7 @@ export const PincodeInputField = forwardRef<View, InputFieldProps>(
     { characterElement: Character, onCharacterChange, ...props },
     ref
   ) {
-    const input = useAtomValue(inputAtom);
+    const input = useAtomValue(inputAtom, { store });
     const inputValueRef = useRef(input);
     useEffect(() => {
       for (let i = 0; i < input.length; i++) {
