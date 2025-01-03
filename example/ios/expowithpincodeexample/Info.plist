@@ -27,7 +27,6 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>example-app-scheme</string>
           <string>expo.modules.withpincode.example</string>
         </array>
       </dict>
@@ -45,12 +44,6 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to use Face ID</string>
-    <key>NSUserActivityTypes</key>
-    <array>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

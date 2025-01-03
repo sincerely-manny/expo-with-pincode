@@ -1,13 +1,13 @@
 {
   "name": "expo-with-pincode",
-  "version": "0.3.11",
-  "description": "HOC to protect a route with a pincode/FaceId",
+  "version": "0.1.0",
+  "description": "Headless UI library for creating a pincode screen in your app.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
-    "lint": "expo-module lint",
+    "lint": "npx @biomejs/biome check --write",
     "test": "expo-module test",
     "prepare": "expo-module prepare",
     "prepublishOnly": "expo-module prepublishOnly",
@@ -25,40 +25,30 @@
   "bugs": {
     "url": "https://github.com/sincerely-manny/expo-with-pincode/issues"
   },
-  "author": "Kirill Serebryannyy <sincerely.manny@gmail.com> (sincerely-manny)",
+  "author": "Kirill Serebryannyy <sincerely.manny@gmail.com> (https://github.com/sincerely-manny/)",
   "license": "MIT",
   "homepage": "https://github.com/sincerely-manny/expo-with-pincode#readme",
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^5.62.1",
+    "@biomejs/biome": "1.9.4",
     "@types/react": "~18.3.12",
-    "eslint-config-expo": "^8.0.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-tailwindcss": "^3.17.5",
-    "eslint-plugin-unicorn": "^56.0.1",
-    "eslint-plugin-unused-imports": "^4.1.4",
     "expo": "~52.0.0",
-    "expo-local-authentication": "*",
+    "expo-local-authentication": "^15.0.1",
     "expo-module-scripts": "^4.0.2",
-    "expo-router": "*",
-    "expo-secure-store": "*",
-    "expo-sqlite": "^15.0.3",
-    "jotai": "^2.10.4",
-    "prettier-plugin-tailwindcss": "^0.6.9",
+    "expo-secure-store": "^14.0.0",
+    "expo-sqlite": "^15.0.5",
     "react-native": "0.76.0",
-    "superjson": "*"
+    "typescript": "^5.7.2"
   },
   "peerDependencies": {
     "expo": "*",
     "expo-local-authentication": "*",
-    "expo-router": "*",
     "expo-secure-store": "*",
     "expo-sqlite": "*",
-    "jotai": "*",
     "react": "*",
-    "react-native": "*",
-    "superjson": "*"
+    "react-native": "*"
+  },
+  "dependencies": {
+    "@xstate/store": "^2.6.2",
+    "immer": "^10.1.1"
   }
 }
