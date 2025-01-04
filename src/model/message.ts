@@ -18,7 +18,7 @@ export function handleMessages({
   mode,
   step,
   input,
-}: StoreContextState & { input: StoreContextInput }) {
+}: StoreContextState & { input: StoreContextInput['value'] }) {
   if (success) {
     switch (mode) {
       case 'check':
@@ -47,7 +47,7 @@ export function handleMessages({
     return;
   }
 
-  if (input.value.some((i) => i !== null)) {
+  if (input.some((i) => i !== null)) {
     return;
   }
 

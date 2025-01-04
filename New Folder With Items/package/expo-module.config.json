@@ -1,9 +1,0 @@
-{
-  "platforms": ["apple", "android", "web"],
-  "apple": {
-    "modules": ["ExpoWithPincodeModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.withpincode.ExpoWithPincodeModule"]
-  }
-}

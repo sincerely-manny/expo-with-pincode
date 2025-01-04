@@ -5,6 +5,7 @@ import {
   setItemAsync,
 } from 'expo-secure-store';
 import { PINCODE_SECURE_KEY } from '../constants';
+import { store } from '../store';
 
 /**
  * Securely store the pincode in the keychain
@@ -15,6 +16,10 @@ export async function setPincode(pincode: string) {
   try {
     await setItemAsync(PINCODE_SECURE_KEY, pincode, {
       keychainAccessible: WHEN_UNLOCKED,
+    });
+    store.send({
+      type: 'device.setIsPincodeSet',
+      isPincodeSet: true,
     });
     return true;
   } catch (error) {
@@ -47,6 +52,10 @@ export async function clearPincode() {
   try {
     await deleteItemAsync(PINCODE_SECURE_KEY, {
       keychainAccessible: WHEN_UNLOCKED,
+    });
+    store.send({
+      type: 'device.setIsPincodeSet',
+      isPincodeSet: false,
     });
     return true;
   } catch (error) {

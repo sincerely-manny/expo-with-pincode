@@ -126,8 +126,18 @@ type Transitions = {
 
 type Events = {
   type: 'state.changed';
-  value: StoreContextState & { input: StoreContextInput };
+  value: StoreContextState & { input: StoreContextInput['value'] };
 };
+
+function emitStateChange(
+  state: StoreContextState,
+  input: StoreContextInput,
+  emit: (event: Events) => void
+) {
+  // We need to clone the input value to proxy errors
+  const value = [...input.value] as StoreContextInput['value'];
+  emit({ type: 'state.changed', value: { ...state, input: value } });
+}
 
 export const store = createStoreWithProducer<Context, Transitions, Events>(
   produce,
@@ -163,7 +173,7 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         input.value = Array(input.value.length).fill(
           null
         ) as StoreContextInput['value'];
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       //
       // MARK: - Form state management
@@ -176,7 +186,7 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         } else {
           state.error = false;
         }
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       'state.success': ({ state, input }, { enable = true }, { emit }) => {
         if (enable) {
@@ -186,7 +196,7 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         } else {
           state.success = false;
         }
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       'state.loading': ({ state, input }, { enable = true }, { emit }) => {
         if (enable) {
@@ -196,13 +206,13 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         } else {
           state.loading = false;
         }
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       'state.reset': ({ state, input }, _: EmptyPayload, { emit }) => {
         state.error = false;
         state.success = false;
         state.loading = false;
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       'state.message': (
         { state, config },
@@ -217,7 +227,7 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
       ) => {
         state.mode = event.mode;
         state.step = STEP.enter;
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       'state.step': (
         { state, input },
@@ -225,7 +235,7 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         { emit }
       ) => {
         state.step = event.step;
-        emit({ type: 'state.changed', value: { ...state, input } });
+        emitStateChange(state, input, emit);
       },
       //
       // MARK: - Device state management
@@ -275,12 +285,12 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
       // MARK: - Session management
       //
       'session.startTimeout': ({ session, config }) => {
+        session.validTill = new Date(Date.now() + config.sessionTimeout);
         session.timeout = setTimeout(() => {
-          if (!session.mutex) {
-            session.isAuthenticated = false;
-            session.validTill = null;
+          const mutex = store.getSnapshot().context.session.mutex;
+          if (!mutex) {
+            store.send({ type: 'session.end' });
           } else {
-            session.validTill = new Date(Date.now() + config.sessionTimeout);
             store.send({ type: 'session.startTimeout' });
           }
         }, config.sessionTimeout);
