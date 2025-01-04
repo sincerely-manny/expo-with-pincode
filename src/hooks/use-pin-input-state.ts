@@ -1,28 +1,18 @@
-import { useAtomValue } from 'jotai';
-
-import { store } from '../components/pincode-store-provider';
-import {
-  cursorAtom,
-  errorAtom,
-  inputAtom,
-  loadingAtom,
-  messageAtom,
-  successAtom,
-} from '../store/component-state';
+import { useSelector } from '@xstate/store/react';
+import { store } from '../store';
 
 export function usePinInputState() {
-  const error = useAtomValue(errorAtom, { store });
-  const success = useAtomValue(successAtom, { store });
-  const input = useAtomValue(inputAtom, { store });
-  const cursor = useAtomValue(cursorAtom, { store });
-  const isFilled = input.every((i) => i !== null);
-  const loading = useAtomValue(loadingAtom, { store });
-  const message = useAtomValue(messageAtom, { store });
+  const { value, cursor } = useSelector(store, (state) => state.context.input);
+  const { error, success, loading, message } = useSelector(
+    store,
+    (state) => state.context.state
+  );
+  const isFilled = value.every((i) => i !== null);
 
   return {
     error,
     success,
-    input,
+    input: value,
     cursor,
     isFilled,
     loading,

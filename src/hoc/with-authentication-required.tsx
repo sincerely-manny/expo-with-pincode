@@ -1,18 +1,8 @@
-// import { PincodeScreen } from "../screen/pincode";
-import { useFocusEffect } from 'expo-router';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSelector } from '@xstate/store/react';
 import type { ComponentType, PropsWithoutRef } from 'react';
-import { forwardRef, useCallback, useEffect } from 'react';
+import { forwardRef, useCallback } from 'react';
 
-import { store } from '../components/pincode-store-provider';
-import { useLocalAuthentication } from '../hooks/use-local-authentication';
-import {
-  authMutexAtom,
-  isAuthenticatedAtomGet,
-  isAuthenticatedAtomSet,
-} from '../store/auth';
-import { configAtom } from '../store/config';
-import { sessionValidTillAtom, sessoionTimeoutAtom } from '../store/session';
+import { store } from '../store';
 
 /**
  * A higher-order component that wraps a component and requires the user to be authenticated.
@@ -26,19 +16,32 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
 ) {
   const WithAuthenticationRequired = forwardRef<unknown, P>(
     function WithAuthenticationRequired(props, ref) {
-      useAuthRenewalInterval();
-      const { isPincodeSet } = useLocalAuthentication();
-      const isAuthenticated = useAtomValue(isAuthenticatedAtomGet, { store });
-      const setAuthMutex = useSetAtom(authMutexAtom, { store });
-      const { AuthScreen, SetPinScreen, requireSetPincode } =
-        store.get(configAtom);
+      const isPincodeSet = useSelector(
+        store,
+        (state) => state.context.device.isPincodeSet
+      );
+      const isAuthenticated = useSelector(
+        store,
+        (state) => state.context.session.isAuthenticated
+      );
+      const setAuthMutex = useCallback((lock: boolean) => {
+        store.send({
+          type: 'session.setMutex',
+          lock,
+        });
+      }, []);
 
-      useFocusEffect(() => {
-        setAuthMutex(true);
-        return () => {
-          setAuthMutex(false);
-        };
-      });
+      const { AuthScreen, SetPinScreen, requireSetPincode } = useSelector(
+        store,
+        (state) => state.context.config
+      );
+
+      // useFocusEffect(() => {
+      //   setAuthMutex(true);
+      //   return () => {
+      //     setAuthMutex(false);
+      //   };
+      // });
 
       if (!AuthScreen || (!SetPinScreen && requireSetPincode)) {
         throw new Error(
@@ -49,7 +52,8 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
       if (!isAuthenticated) {
         if (isPincodeSet) {
           return <AuthScreen />;
-        } else if (requireSetPincode && SetPinScreen) {
+        }
+        if (requireSetPincode && SetPinScreen) {
           return <SetPinScreen />;
         }
       }
@@ -57,41 +61,4 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
     }
   );
   return WithAuthenticationRequired;
-}
-
-function useAuthRenewalInterval() {
-  const isAuthenticated = useAtomValue(isAuthenticatedAtomGet, { store });
-  const setIsAuthenticated = useSetAtom(isAuthenticatedAtomSet, { store });
-  const authMutex = useAtomValue(authMutexAtom, { store });
-  const setSessionTimeout = useSetAtom(sessoionTimeoutAtom, { store });
-  const sessionValidTill = useAtomValue(sessionValidTillAtom, { store });
-
-  const clearSessionWithMutex = useCallback(() => {
-    if (authMutex) {
-      setIsAuthenticated(true);
-      return;
-    }
-    setIsAuthenticated(false);
-  }, [authMutex, setIsAuthenticated]);
-
-  useEffect(() => {
-    setSessionTimeout((prevTimeout) => {
-      prevTimeout && clearTimeout(prevTimeout);
-      if (!isAuthenticated || !sessionValidTill) {
-        return null;
-      }
-      const t = sessionValidTill.getTime() - Date.now();
-      const timeout = setTimeout(() => {
-        clearSessionWithMutex();
-      }, t);
-      return timeout;
-    });
-  }, [
-    sessionValidTill,
-    isAuthenticated,
-    authMutex,
-    setSessionTimeout,
-    clearSessionWithMutex,
-  ]);
-  return null;
 }

@@ -1,9 +1,7 @@
-import { useAtomValue } from 'jotai';
+import { useSelector } from '@xstate/store/react';
 import { type FC, forwardRef, useEffect, useRef } from 'react';
 import { View, type ViewProps } from 'react-native';
-
-import { inputAtom } from '../store/component-state';
-import { store } from './pincode-store-provider';
+import { store } from '../store';
 
 type CharacterProps = {
   value?: number | null;
@@ -19,7 +17,7 @@ export const PincodeInputField = forwardRef<View, InputFieldProps>(
     { characterElement: Character, onCharacterChange, ...props },
     ref
   ) {
-    const input = useAtomValue(inputAtom, { store });
+    const input = useSelector(store, (state) => state.context.input.value);
     const inputValueRef = useRef(input);
     useEffect(() => {
       for (let i = 0; i < input.length; i++) {
@@ -33,6 +31,7 @@ export const PincodeInputField = forwardRef<View, InputFieldProps>(
     return (
       <View {...props} ref={ref}>
         {input.map((value, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: This is a static array
           <Character key={index} value={value} />
         ))}
       </View>

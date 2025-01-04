@@ -1,8 +1,8 @@
 import {
-    deleteItemAsync,
-    getItemAsync,
-    setItemAsync,
-    WHEN_UNLOCKED,
+  WHEN_UNLOCKED,
+  deleteItemAsync,
+  getItemAsync,
+  setItemAsync,
 } from 'expo-secure-store';
 import { PINCODE_SECURE_KEY } from '../constants';
 
@@ -27,7 +27,7 @@ export async function setPincode(pincode: string) {
  * @param pincode - the pincode to check
  * @returns true if the pincode matches, false if it does not match or an error occurred
  */
-export async function checkPincode(pincode: string) {
+export async function verifyPincode(pincode: string) {
   try {
     const storedPincode = await getItemAsync(PINCODE_SECURE_KEY, {
       keychainAccessible: WHEN_UNLOCKED,
@@ -56,9 +56,9 @@ export async function clearPincode() {
 }
 
 /**
-* Check if a pincode is set
-* @returns true if a pincode is set, false otherwise
-*/
+ * Check if a pincode is set
+ * @returns true if a pincode is set, false otherwise
+ */
 export async function isPincodeSet() {
   try {
     const storedPincode = await getItemAsync(PINCODE_SECURE_KEY, {

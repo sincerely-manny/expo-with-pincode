@@ -1,19 +1,13 @@
-import { useAtomValue, useSetAtom } from 'jotai';
-import { forwardRef, useEffect } from 'react';
+import { useSelector } from '@xstate/store/react';
+import { forwardRef, useCallback, useEffect } from 'react';
 import { View } from 'react-native';
-
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
+import { store } from '../store';
 import {
-  errorAtom,
-  inputAtom,
-  messageAtom,
-  modeAtom,
-  stepAtom,
-  successAtom,
-} from '../store/component-state';
-import { configAtom } from '../store/config';
-import { type PincodeScreenProps, isPincodeScreenModeGuard } from '../types';
-import { store } from './pincode-store-provider';
+  type PicodeScreenMode,
+  type PincodeScreenProps,
+  isPincodeScreenModeGuard,
+} from '../types';
 
 export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
   function PincodeScreen(
@@ -30,19 +24,22 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
       throw new Error('Invalid pincode screen mode');
     }
 
-    const success = useAtomValue(successAtom, { store });
-    const error = useAtomValue(errorAtom, { store });
-    const step = useAtomValue(stepAtom, { store });
-    const setMode = useSetAtom(modeAtom, { store });
+    const setMode = useCallback((mode: PicodeScreenMode) => {
+      store.send({
+        type: 'state.mode',
+        mode,
+      });
+    }, []);
+
     useEffect(() => {
       setMode(mode);
     }, [mode, setMode]);
 
-    const input = useAtomValue(inputAtom, { store });
-    const { submitAfterLastInput, messages } = useAtomValue(configAtom, {
+    const input = useSelector(store, (state) => state.context.input.value);
+    const submitAfterLastInput = useSelector(
       store,
-    });
-    const setMessage = useSetAtom(messageAtom, { store });
+      (state) => state.context.config.submitAfterLastInput
+    );
 
     const { submitCheck, submitSet, submitReset } = useLocalAuthentication();
 
@@ -58,53 +55,15 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
           submitReset(onSuccessfulResetPincode);
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [input, mode]);
-
-    // MARK: - Message handling
-
-    useEffect(() => {
-      if (success) {
-        if (mode === 'check') {
-          setMessage(messages.correct);
-        } else if (mode === 'create') {
-          setMessage(messages.set);
-        } else if (mode === 'reset') {
-          setMessage(messages.isreset);
-        }
-      } else if (error) {
-        if (mode === 'check' || mode === 'reset') {
-          setMessage(messages.incorrect);
-        } else if (mode === 'create') {
-          setMessage(messages.nomatch);
-        }
-      } else if (mode === 'check' && input.every((i) => i === null)) {
-        setMessage(messages.check);
-      } else if (mode === 'create' && input.every((i) => i === null)) {
-        if (step === 'enter') {
-          setMessage(messages.create);
-        } else if (step === 'confirm') {
-          setMessage(messages.confirm);
-        }
-      } else if (mode === 'reset' && input.every((i) => i === null)) {
-        setMessage(messages.reset);
-      }
     }, [
       input,
       mode,
-      messages.check,
-      setMessage,
-      messages.create,
-      messages.confirm,
-      step,
-      success,
-      error,
-      messages.correct,
-      messages.incorrect,
-      messages.nomatch,
-      messages.set,
-      messages.isreset,
-      messages.reset,
+      submitAfterLastInput,
+      submitCheck,
+      submitSet,
+      submitReset,
+      onSuccessfulSetPincode,
+      onSuccessfulResetPincode,
     ]);
 
     return (

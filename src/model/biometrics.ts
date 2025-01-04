@@ -17,7 +17,11 @@ export async function isBiometricsAvailable() {
  * Authenticate with biometrics
  * @returns true if the authentication was successful, false otherwise
  */
-export async function authenticateBiometrics() {
-  const result = await LocalAuthentication.authenticateAsync();
+export async function verifyBiometrics() {
+  const result = await LocalAuthentication.authenticateAsync({
+    promptMessage: 'Authenticate',
+    cancelLabel: 'Cancel',
+    disableDeviceFallback: true,
+  });
   return result.success;
 }
