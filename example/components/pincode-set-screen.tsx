@@ -3,16 +3,16 @@ import {
   PincodeInputField,
   PincodeScreen,
   PinpadButton,
-  useLocalAuthentication,
-  usePinpadStateMessage,
+  usePinInputState,
+  usePinSettings,
 } from 'expo-with-pincode';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 export function PincodeSetScreen() {
-  const message = usePinpadStateMessage();
+  const { message } = usePinInputState();
   const router = useRouter();
-  const { isPincodeSet } = useLocalAuthentication();
+  const { isPincodeSet } = usePinSettings();
   const [mode, setMode] = useState<'reset' | 'create'>(
     isPincodeSet ? 'reset' : 'create'
   );

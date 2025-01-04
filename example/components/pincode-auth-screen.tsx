@@ -2,12 +2,12 @@ import {
   PincodeInputField,
   PincodeScreen,
   PinpadButton,
-  usePinpadStateMessage,
+  usePinInputState,
 } from 'expo-with-pincode';
 import { Text, View } from 'react-native';
 
 export function PincodeAuthScreen() {
-  const message = usePinpadStateMessage();
+  const { message } = usePinInputState();
   return (
     <PincodeScreen mode="check">
       <Text
