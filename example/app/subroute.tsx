@@ -1,16 +1,11 @@
-import { Link } from 'expo-router';
-import { withAuthenticationRequired } from 'expo-with-pincode';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
-function ProtectedScreen() {
+export default function SubrouteScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
         <Group name="Expo with Pincode">
-          <Text>❗️protected content❗️</Text>
-          <Link href="/subroute" style={styles.link}>
-            Go to subroute
-          </Link>
+          <Text>subroute</Text>
         </Group>
       </ScrollView>
     </SafeAreaView>
@@ -54,5 +49,3 @@ const styles = {
     color: 'blue',
   },
 };
-
-export default withAuthenticationRequired(ProtectedScreen);

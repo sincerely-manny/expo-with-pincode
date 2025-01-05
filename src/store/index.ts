@@ -312,9 +312,11 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         store.send({ type: 'session.clearTimeout' });
       },
       'session.renew': ({ session, config }) => {
-        store.send({ type: 'session.clearTimeout' });
-        session.validTill = new Date(Date.now() + config.sessionTimeout);
-        store.send({ type: 'session.startTimeout' });
+        if (session.isAuthenticated) {
+          store.send({ type: 'session.clearTimeout' });
+          session.validTill = new Date(Date.now() + config.sessionTimeout);
+          store.send({ type: 'session.startTimeout' });
+        }
       },
       'session.setMutex': ({ session }, event: { lock: boolean }) => {
         session.mutex = event.lock;

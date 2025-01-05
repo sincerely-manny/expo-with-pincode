@@ -1,8 +1,10 @@
 import { useSelector } from '@xstate/store/react';
+import throttle from 'lodash.throttle';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback } from 'react';
-
+import { StyleSheet } from 'react-native';
 import { store } from '../store';
+import { VisibilityView } from '../visibility-view';
 
 /**
  * A higher-order component that wraps a component and requires the user to be authenticated.
@@ -31,17 +33,17 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
         });
       }, []);
 
+      const renewSession = useCallback(
+        throttle(() => {
+          store.send({ type: 'session.renew' });
+        }, 1000),
+        []
+      );
+
       const { AuthScreen, SetPinScreen, requireSetPincode } = useSelector(
         store,
         (state) => state.context.config
       );
-
-      // useFocusEffect(() => {
-      //   setAuthMutex(true);
-      //   return () => {
-      //     setAuthMutex(false);
-      //   };
-      // });
 
       if (!AuthScreen || (!SetPinScreen && requireSetPincode)) {
         throw new Error(
@@ -57,8 +59,28 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
           return <SetPinScreen />;
         }
       }
-      return <Component {...props} ref={ref} />;
+      return (
+        <VisibilityView
+          onBecameVisible={() => setAuthMutex(true)}
+          onBecameHidden={() => setAuthMutex(false)}
+          onTouchStart={() => renewSession()}
+          style={styles.container}
+        >
+          {!isAuthenticated && isPincodeSet && <AuthScreen />}
+          {!isAuthenticated &&
+            !isPincodeSet &&
+            requireSetPincode &&
+            !!SetPinScreen && <SetPinScreen />}
+          {isAuthenticated && <Component {...props} ref={ref} />}
+        </VisibilityView>
+      );
     }
   );
   return WithAuthenticationRequired;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
