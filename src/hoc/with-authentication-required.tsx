@@ -1,8 +1,8 @@
 import { useSelector } from '@xstate/store/react';
 import throttle from 'lodash.throttle';
 import type { ComponentType, PropsWithoutRef } from 'react';
-import { forwardRef, useCallback } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { forwardRef, useCallback, useMemo, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { store } from '../store';
 import { FadeOutView } from '../views/fade-out-view';
 import { VisibilityView } from '../views/visibility-view';
@@ -52,6 +52,19 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
         );
       }
 
+      const showProtectedScreen = useMemo(() => {
+        if (!isPincodeSet && !requireSetPincode) {
+          return true;
+        }
+        return isAuthenticated;
+      }, [isAuthenticated, isPincodeSet, requireSetPincode]);
+
+      const [fadeOutViewDisplay, setFadeOutViewDisplay] = useState(
+        !showProtectedScreen
+      );
+
+      console.log('isAuthenticated', isAuthenticated);
+
       return (
         <VisibilityView
           onBecameVisible={() => setAuthMutex(true)}
@@ -59,20 +72,22 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
           onTouchStart={() => renewSession()}
           style={styles.container}
         >
-          <FadeOutView
-            style={styles.container}
-            isVisible={true}
-            onFadeIn={() => console.log('Fade in')}
-            onFadeOut={() => console.log('Fade out')}
-          >
-            {!isAuthenticated && isPincodeSet && <AuthScreen />}
-            {!isAuthenticated &&
-              !isPincodeSet &&
-              requireSetPincode &&
-              !!SetPinScreen && <SetPinScreen />}
-            <Text>Test</Text>
-          </FadeOutView>
           {isAuthenticated && <Component {...props} ref={ref} />}
+          <FadeOutView
+            style={[
+              styles.pinContainer,
+              {
+                display: fadeOutViewDisplay ? 'flex' : 'none',
+              },
+            ]}
+            isVisible={!isAuthenticated}
+            onFadeOut={() => setFadeOutViewDisplay(false)}
+          >
+            {isPincodeSet && <AuthScreen />}
+            {!isPincodeSet && requireSetPincode && !!SetPinScreen && (
+              <SetPinScreen />
+            )}
+          </FadeOutView>
         </VisibilityView>
       );
     }
@@ -83,5 +98,12 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  pinContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
