@@ -8,6 +8,7 @@ config({
   SetPinScreen: PincodeSetScreen,
   AuthScreen: PincodeAuthScreen,
   sessionTimeout: 10_000,
+  animationDuration: 5000,
 });
 
 export default function RootLayout() {

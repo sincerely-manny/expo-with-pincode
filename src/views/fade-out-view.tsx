@@ -7,8 +7,8 @@ export type FadeOutViewProps = ViewProps & {
   animationDuration?: number;
   fadeInDelay?: number;
   fadeOutDelay?: number;
-  onFadeIn?: () => void;
-  onFadeOut?: () => void;
+  onFadeInComplete?: () => void;
+  onFadeOutComplete?: () => void;
 };
 
 const NativeView: ComponentType<FadeOutViewProps> =

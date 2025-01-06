@@ -1,6 +1,7 @@
 import { createStoreWithProducer } from '@xstate/store';
 import { produce } from 'immer';
 import {
+  DEFAULT_ANIMATION_DURATION,
   DEFAULT_PINCODE_LENGTH,
   DEFAULT_SESSION_TIMEOUT,
   DEFAULT_SUBMIT_TIMEOUT,
@@ -62,6 +63,7 @@ const config: Config = {
   messages: MESSAGES,
   submitTimeout: DEFAULT_SUBMIT_TIMEOUT,
   submitAfterLastInput: true,
+  animationDuration: DEFAULT_ANIMATION_DURATION,
 };
 
 type Session = {

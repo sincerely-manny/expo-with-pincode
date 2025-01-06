@@ -17,26 +17,30 @@ import {
  *
  * @property {number} sessionTimeout - Session timeout in milliseconds (default: 60000).
  * @property {number} pincodeLength - Length of the pincode (default: 4).
- * @property {React.FC} [AuthScreen] - Component for the "Enter Pincode" screen (default: null).
- * @property {React.FC} [SetPinScreen] - Component for the "Set Pincode" screen (default: null).
+ * @property {React.FC} [AuthScreen] - Component for the "Enter Pincode" screen (default: undefined).
+ * @property {React.FC} [SetPinScreen] - Component for the "Set Pincode" screen (default: undefined).
+ * @property {React.FC} [LoadingScreen] - Component for the loading screen (default: undefined).
  * @property {boolean} requireSetPincode - Whether setting a pincode is required (default: false).
  * @property {() => void} [onSuccessfulAuth] - Callback invoked after successful authentication.
  * @property {() => void} [onFailedAuth] - Callback invoked after failed authentication.
  * @property {PincodeScreenMessages} messages - Messages displayed for various modes.
  * @property {number} submitTimeout - Timeout after successful submit or error in milliseconds (default: 2000).
  * @property {boolean} submitAfterLastInput - Automatically submit after the last input (default: true).
+ * @property {number} animationDuration - Duration of the pincode screen fadeout after successful sign-in in milliseconds (default: 1000).
  */
 export type Config = {
   sessionTimeout: number;
   pincodeLength: number;
   AuthScreen?: FC;
   SetPinScreen?: FC;
+  LoadingScreen?: FC;
   requireSetPincode: boolean;
   onSuccessfulAuth?: () => void;
   onFailedAuth?: () => void;
   messages: PincodeScreenMessages;
   submitTimeout: number;
   submitAfterLastInput: boolean;
+  animationDuration: number;
 };
 
 export type PicodeScreenMode = keyof typeof MODE;

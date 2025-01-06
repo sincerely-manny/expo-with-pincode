@@ -2,7 +2,7 @@ import { useSelector } from '@xstate/store/react';
 import throttle from 'lodash.throttle';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback, useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { store } from '../store';
 import { FadeOutView } from '../views/fade-out-view';
 import { VisibilityView } from '../views/visibility-view';
@@ -41,10 +41,13 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
         []
       );
 
-      const { AuthScreen, SetPinScreen, requireSetPincode } = useSelector(
-        store,
-        (state) => state.context.config
-      );
+      const {
+        AuthScreen,
+        SetPinScreen,
+        LoadingScreen,
+        requireSetPincode,
+        animationDuration,
+      } = useSelector(store, (state) => state.context.config);
 
       if (!AuthScreen || (!SetPinScreen && requireSetPincode)) {
         throw new Error(
@@ -63,7 +66,15 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
         !showProtectedScreen
       );
 
-      console.log('isAuthenticated', isAuthenticated);
+      if (isPincodeSet === undefined) {
+        return LoadingScreen ? (
+          <LoadingScreen />
+        ) : (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" />
+          </View>
+        );
+      }
 
       return (
         <VisibilityView
@@ -81,7 +92,8 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
               },
             ]}
             isVisible={!isAuthenticated}
-            onFadeOut={() => setFadeOutViewDisplay(false)}
+            onFadeOutComplete={() => setFadeOutViewDisplay(false)}
+            animationDuration={animationDuration}
           >
             {isPincodeSet && <AuthScreen />}
             {!isPincodeSet && requireSetPincode && !!SetPinScreen && (
@@ -105,5 +117,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

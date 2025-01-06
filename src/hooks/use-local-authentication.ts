@@ -1,8 +1,10 @@
 import { useSelector } from '@xstate/store/react';
 import { useCallback, useRef } from 'react';
+import { PINCODE_SET_CONFIRMATION_WAIT } from '../constants';
 import { verifyBiometrics } from '../model/biometrics';
 import { clearPincode, setPincode, verifyPincode } from '../model/pincode';
 import { store } from '../store';
+import { waitAsync } from '../utils/wait';
 
 /**
  * Hook to use for local authentication.
@@ -18,10 +20,8 @@ import { store } from '../store';
  */
 export function useLocalAuthentication() {
   const { value: input } = useSelector(store, (state) => state.context.input);
-  const { onFailedAuth, onSuccessfulAuth, submitTimeout } = useSelector(
-    store,
-    (state) => state.context.config
-  );
+  const { onFailedAuth, onSuccessfulAuth, submitTimeout, animationDuration } =
+    useSelector(store, (state) => state.context.config);
 
   // MARK: - Authencitation methods
   const authenticate = useCallback(
@@ -62,8 +62,12 @@ export function useLocalAuthentication() {
   const handleAuthSuccess = useCallback(async () => {
     store.send({ type: 'state.success' });
     onSuccessfulAuth?.();
-    resetWithTimeout();
-  }, [onSuccessfulAuth, resetWithTimeout]);
+    // resetWithTimeout();
+    setTimeout(() => {
+      store.send({ type: 'input.reset' });
+      store.send({ type: 'state.reset' });
+    }, submitTimeout + animationDuration);
+  }, [onSuccessfulAuth, submitTimeout, animationDuration]);
 
   const handleAuthFailure = useCallback(() => {
     store.send({ type: 'state.error' });
@@ -88,6 +92,7 @@ export function useLocalAuthentication() {
     async (onSuccessCallback?: () => void) => {
       if (confirmationRef.current === null) {
         confirmationRef.current = input.join('');
+        await waitAsync(PINCODE_SET_CONFIRMATION_WAIT);
         store.send({ type: 'input.reset' });
         store.send({ type: 'state.step', step: 'confirm' });
         return;
@@ -95,11 +100,9 @@ export function useLocalAuthentication() {
       if (confirmationRef.current === input.join('')) {
         await setPincode(confirmationRef.current);
         store.send({ type: 'state.success' });
-        // onSuccessfulAuth && onSuccessfulAuth();
         resetWithTimeout(onSuccessCallback);
       } else {
         store.send({ type: 'state.error' });
-        // onFailedAuth && onFailedAuth();
         resetWithTimeout();
       }
       confirmationRef.current = null;

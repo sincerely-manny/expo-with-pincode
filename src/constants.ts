@@ -3,6 +3,7 @@ export const PINCODE_SECURE_KEY =
 export const DEFAULT_SESSION_TIMEOUT = 60 * 1000; // 1 minute
 export const DEFAULT_PINCODE_LENGTH = 4 as const;
 export const DEFAULT_SUBMIT_TIMEOUT = 2000; // 2 seconds
+export const DEFAULT_ANIMATION_DURATION = 1000; // 1 second
 
 export const MODE = {
   create: 'create',
@@ -58,3 +59,5 @@ export const PINPAD = {
   clear: 'clear',
   submit: 'submit',
 } as const;
+
+export const PINCODE_SET_CONFIRMATION_WAIT = 300;
