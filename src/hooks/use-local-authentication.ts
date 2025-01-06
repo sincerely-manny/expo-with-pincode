@@ -23,6 +23,13 @@ export function useLocalAuthentication() {
   const { onFailedAuth, onSuccessfulAuth, submitTimeout, animationDuration } =
     useSelector(store, (state) => state.context.config);
 
+  const isAuthenticated = useSelector(
+    store,
+    (state) => state.context.session.isAuthenticated
+  );
+
+  const mode = useSelector(store, (state) => state.context.state.mode);
+
   // MARK: - Authencitation methods
   const authenticate = useCallback(
     async (method: 'pin' | 'biometrics') => {
@@ -85,6 +92,7 @@ export function useLocalAuthentication() {
       store.send({ type: 'state.error' });
       handleAuthFailure();
     }
+    return success;
   }, [handleAuthFailure, handleAuthSuccess, authenticate]);
 
   const confirmationRef = useRef<string | null>(null);
@@ -95,9 +103,10 @@ export function useLocalAuthentication() {
         await waitAsync(PINCODE_SET_CONFIRMATION_WAIT);
         store.send({ type: 'input.reset' });
         store.send({ type: 'state.step', step: 'confirm' });
-        return;
+        return true;
       }
-      if (confirmationRef.current === input.join('')) {
+      const success = confirmationRef.current === input.join('');
+      if (success) {
         await setPincode(confirmationRef.current);
         store.send({ type: 'state.success' });
         resetWithTimeout(onSuccessCallback);
@@ -106,6 +115,7 @@ export function useLocalAuthentication() {
         resetWithTimeout();
       }
       confirmationRef.current = null;
+      return success;
     },
     [input, resetWithTimeout]
   );
@@ -121,11 +131,15 @@ export function useLocalAuthentication() {
         store.send({ type: 'state.error' });
         resetWithTimeout();
       }
+      return success;
     },
     [resetWithTimeout, authenticate]
   );
 
   const submitBiometrics = useCallback(async () => {
+    if (isAuthenticated || mode !== 'check') {
+      return;
+    }
     const success = await authenticate('biometrics');
     if (success) {
       store.send({ type: 'state.success' });
@@ -134,7 +148,14 @@ export function useLocalAuthentication() {
       store.send({ type: 'state.error' });
       handleAuthFailure();
     }
-  }, [handleAuthFailure, handleAuthSuccess, authenticate]);
+    return success;
+  }, [
+    handleAuthFailure,
+    handleAuthSuccess,
+    authenticate,
+    isAuthenticated,
+    mode,
+  ]);
 
   // MARK: - Return
   return {
@@ -143,5 +164,6 @@ export function useLocalAuthentication() {
     submitReset,
     submitBiometrics,
     authenticate,
+    isAuthenticated,
   };
 }

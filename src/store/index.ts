@@ -64,6 +64,7 @@ const config: Config = {
   submitTimeout: DEFAULT_SUBMIT_TIMEOUT,
   submitAfterLastInput: true,
   animationDuration: DEFAULT_ANIMATION_DURATION,
+  autoFaceId: true,
 };
 
 type Session = {
@@ -86,8 +87,8 @@ type Settings = {
 };
 
 const settings: Settings = {
-  isPasscodeEnabled: getStorageItem('USE_PASSCODE_ENABLED'),
-  isFaceIdEnabled: getStorageItem('USE_FACE_ID_ENABLED'),
+  isPasscodeEnabled: getStorageItem('EWP_USE_PASSCODE_ENABLED'),
+  isFaceIdEnabled: getStorageItem('EWP_USE_FACE_ID_ENABLED'),
 };
 
 type Context = {
@@ -274,14 +275,14 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
         event: { isPasscodeEnabled: boolean }
       ) => {
         settings.isPasscodeEnabled = event.isPasscodeEnabled;
-        setStorageItem('USE_PASSCODE_ENABLED', event.isPasscodeEnabled);
+        setStorageItem('EWP_USE_PASSCODE_ENABLED', event.isPasscodeEnabled);
       },
       'settings.setUseFaceId': (
         { settings },
         event: { isFaceIdEnabled: boolean }
       ) => {
         settings.isFaceIdEnabled = event.isFaceIdEnabled;
-        setStorageItem('USE_FACE_ID_ENABLED', event.isFaceIdEnabled);
+        setStorageItem('EWP_USE_FACE_ID_ENABLED', event.isFaceIdEnabled);
       },
       //
       // MARK: - Session management

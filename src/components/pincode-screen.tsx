@@ -1,5 +1,5 @@
 import { useSelector } from '@xstate/store/react';
-import { forwardRef, useCallback, useEffect } from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import { store } from '../store';
@@ -41,7 +41,8 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
       (state) => state.context.config.submitAfterLastInput
     );
 
-    const { submitCheck, submitSet, submitReset } = useLocalAuthentication();
+    const { submitCheck, submitSet, submitReset, submitBiometrics } =
+      useLocalAuthentication();
 
     // MARK: - Auto-submit after last input
 
@@ -63,6 +64,52 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
       submitCheck,
       submitSet,
       submitReset,
+    ]);
+
+    // MARK: - Auto-FaceID
+    //
+    const isFaceIdEnabled = useSelector(
+      store,
+      (state) => state.context.settings.isFaceIdEnabled
+    );
+    const isBiometricsAvailable = useSelector(
+      store,
+      (state) => state.context.device.isBiometricsAvailable
+    );
+    const autoFaceId = useSelector(
+      store,
+      (state) => state.context.config.autoFaceId
+    );
+    const isAuthenticated = useSelector(
+      store,
+      (state) => state.context.session.isAuthenticated
+    );
+
+    const faceIdInvoked = useRef(false);
+
+    useEffect(() => {
+      if (
+        mode === 'check' &&
+        isFaceIdEnabled &&
+        isBiometricsAvailable &&
+        autoFaceId &&
+        !isAuthenticated &&
+        !faceIdInvoked.current
+      ) {
+        faceIdInvoked.current = true;
+        submitBiometrics().then((success) => {
+          if (success) {
+            faceIdInvoked.current = false;
+          }
+        });
+      }
+    }, [
+      mode,
+      isFaceIdEnabled,
+      isBiometricsAvailable,
+      autoFaceId,
+      submitBiometrics,
+      isAuthenticated,
     ]);
 
     return (

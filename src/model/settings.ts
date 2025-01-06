@@ -1,8 +1,9 @@
 import Storage from 'expo-sqlite/kv-store';
 
 const StorageDefault = {
-  USE_PASSCODE_ENABLED: true,
-  USE_FACE_ID_ENABLED: true,
+  EWP_USE_PASSCODE_ENABLED: true,
+  EWP_USE_FACE_ID_ENABLED: true,
+  EWP_AUTO_FACE_ID: true,
 };
 
 export type TKey = keyof typeof StorageDefault;

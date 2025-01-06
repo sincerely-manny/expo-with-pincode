@@ -1,6 +1,6 @@
 {
   "name": "expo-with-pincode",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Headless UI library for creating a pincode screen in your app.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -15,12 +15,7 @@
     "open:ios": "xed example/ios",
     "open:android": "open -a \"Android Studio\" example/android"
   },
-  "keywords": [
-    "react-native",
-    "expo",
-    "expo-with-pincode",
-    "ExpoWithPincode"
-  ],
+  "keywords": ["react-native", "expo", "expo-with-pincode", "ExpoWithPincode"],
   "repository": "https://github.com/sincerely-manny/expo-with-pincode",
   "bugs": {
     "url": "https://github.com/sincerely-manny/expo-with-pincode/issues"

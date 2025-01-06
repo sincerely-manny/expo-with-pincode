@@ -27,6 +27,7 @@ import {
  * @property {number} submitTimeout - Timeout after successful submit or error in milliseconds (default: 2000).
  * @property {boolean} submitAfterLastInput - Automatically submit after the last input (default: true).
  * @property {number} animationDuration - Duration of the pincode screen fadeout after successful sign-in in milliseconds (default: 1000).
+ * @property {boolean} autoFaceId - Automatically show Face ID prompt (default: true).
  */
 export type Config = {
   sessionTimeout: number;
@@ -41,6 +42,7 @@ export type Config = {
   submitTimeout: number;
   submitAfterLastInput: boolean;
   animationDuration: number;
+  autoFaceId: boolean;
 };
 
 export type PicodeScreenMode = keyof typeof MODE;
