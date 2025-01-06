@@ -99,7 +99,7 @@ type Context = {
   device: Device;
 };
 
-// biome-ignore lint/complexity/noBannedTypes: union reqired for xstate
+// biome-ignore lint/complexity/noBannedTypes: union required for xstate
 type EmptyPayload = {};
 
 type Transitions = {

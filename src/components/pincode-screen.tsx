@@ -45,6 +45,7 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
 
     // MARK: - Auto-submit after last input
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: adding callback to dependencies will cause infinite loop
     useEffect(() => {
       if (submitAfterLastInput && input.every((i) => i !== null)) {
         if (mode === 'check') {
@@ -62,8 +63,6 @@ export const PincodeScreen = forwardRef<View, PincodeScreenProps>(
       submitCheck,
       submitSet,
       submitReset,
-      onSuccessfulSetPincode,
-      onSuccessfulResetPincode,
     ]);
 
     return (
