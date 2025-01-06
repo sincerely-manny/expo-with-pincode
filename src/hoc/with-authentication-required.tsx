@@ -2,9 +2,10 @@ import { useSelector } from '@xstate/store/react';
 import throttle from 'lodash.throttle';
 import type { ComponentType, PropsWithoutRef } from 'react';
 import { forwardRef, useCallback } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { store } from '../store';
-import { VisibilityView } from '../visibility-view';
+import { FadeOutView } from '../views/fade-out-view';
+import { VisibilityView } from '../views/visibility-view';
 
 /**
  * A higher-order component that wraps a component and requires the user to be authenticated.
@@ -51,14 +52,6 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
         );
       }
 
-      if (!isAuthenticated) {
-        if (isPincodeSet) {
-          return <AuthScreen />;
-        }
-        if (requireSetPincode && SetPinScreen) {
-          return <SetPinScreen />;
-        }
-      }
       return (
         <VisibilityView
           onBecameVisible={() => setAuthMutex(true)}
@@ -66,11 +59,19 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
           onTouchStart={() => renewSession()}
           style={styles.container}
         >
-          {!isAuthenticated && isPincodeSet && <AuthScreen />}
-          {!isAuthenticated &&
-            !isPincodeSet &&
-            requireSetPincode &&
-            !!SetPinScreen && <SetPinScreen />}
+          <FadeOutView
+            style={styles.container}
+            isVisible={true}
+            onFadeIn={() => console.log('Fade in')}
+            onFadeOut={() => console.log('Fade out')}
+          >
+            {!isAuthenticated && isPincodeSet && <AuthScreen />}
+            {!isAuthenticated &&
+              !isPincodeSet &&
+              requireSetPincode &&
+              !!SetPinScreen && <SetPinScreen />}
+            <Text>Test</Text>
+          </FadeOutView>
           {isAuthenticated && <Component {...props} ref={ref} />}
         </VisibilityView>
       );

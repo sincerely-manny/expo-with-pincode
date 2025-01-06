@@ -9,7 +9,7 @@ export type VisibilityViewProps = ViewProps & {
 };
 
 const NativeView: ComponentType<VisibilityViewProps> =
-  requireNativeViewManager('ExpoWithPincode');
+  requireNativeViewManager('VisibilityView');
 
 export function VisibilityView(props: VisibilityViewProps) {
   return <NativeView {...props} />;

@@ -1,9 +1,12 @@
 {
   "platforms": ["apple", "android", "web"],
   "apple": {
-    "modules": ["ExpoWithPincodeModule"]
+    "modules": ["VisibilityViewModule", "FadeOutViewModule"]
   },
   "android": {
-    "modules": ["expo.modules.withpincode.ExpoWithPincodeModule"]
+    "modules": [
+      "expo.modules.withpincode.VisibilityViewModule",
+      "expo.modules.withpincode.FadeOutViewModule"
+    ]
   }
 }
