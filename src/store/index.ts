@@ -81,13 +81,13 @@ const session: Session = {
 };
 
 type Settings = {
-  usePasscode: boolean;
-  useFaceId: boolean;
+  isPasscodeEnabled: boolean;
+  isFaceIdEnabled: boolean;
 };
 
 const settings: Settings = {
-  usePasscode: getStorageItem('USE_PASSCODE_ENABLED'),
-  useFaceId: getStorageItem('USE_FACE_ID_ENABLED'),
+  isPasscodeEnabled: getStorageItem('USE_PASSCODE_ENABLED'),
+  isFaceIdEnabled: getStorageItem('USE_FACE_ID_ENABLED'),
 };
 
 type Context = {
@@ -116,8 +116,8 @@ type Transitions = {
   'device.setIsPincodeSet': { isPincodeSet: boolean };
   'device.setIsBiometricsAvailable': { isBiometricsAvailable: boolean };
   'config.update': Partial<Config>;
-  'settings.setUsePasscode': { usePasscode: boolean };
-  'settings.setUseFaceId': { useFaceId: boolean };
+  'settings.setUsePasscode': { isPasscodeEnabled: boolean };
+  'settings.setUseFaceId': { isFaceIdEnabled: boolean };
   'session.startTimeout': EmptyPayload;
   'session.clearTimeout': EmptyPayload;
   'session.start': EmptyPayload;
@@ -271,17 +271,17 @@ export const store = createStoreWithProducer<Context, Transitions, Events>(
       //
       'settings.setUsePasscode': (
         { settings },
-        event: { usePasscode: boolean }
+        event: { isPasscodeEnabled: boolean }
       ) => {
-        settings.usePasscode = event.usePasscode;
-        setStorageItem('USE_PASSCODE_ENABLED', event.usePasscode);
+        settings.isPasscodeEnabled = event.isPasscodeEnabled;
+        setStorageItem('USE_PASSCODE_ENABLED', event.isPasscodeEnabled);
       },
       'settings.setUseFaceId': (
         { settings },
-        event: { useFaceId: boolean }
+        event: { isFaceIdEnabled: boolean }
       ) => {
-        settings.useFaceId = event.useFaceId;
-        setStorageItem('USE_FACE_ID_ENABLED', event.useFaceId);
+        settings.isFaceIdEnabled = event.isFaceIdEnabled;
+        setStorageItem('USE_FACE_ID_ENABLED', event.isFaceIdEnabled);
       },
       //
       // MARK: - Session management
