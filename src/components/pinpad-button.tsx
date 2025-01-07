@@ -1,13 +1,17 @@
 import { useSelector } from '@xstate/store/react';
-import { type PropsWithRef, forwardRef, useCallback, useMemo } from 'react';
-import { Pressable, type PressableProps, type View } from 'react-native';
+import { forwardRef, useCallback, useMemo } from 'react';
+import type { View } from 'react-native';
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import { store } from '../store';
 import type { PinpadValue } from '../types';
+import {
+  KeyboardPressable,
+  type KeyboardPressableProps,
+} from '../views/keyboard-pressable';
 
 type PinpadButtonProps = {
   value: PinpadValue;
-} & PropsWithRef<PressableProps>;
+} & KeyboardPressableProps;
 
 export const PinpadButton = forwardRef<View, PinpadButtonProps>(
   function PinpadButton({ onPress, value, ...props }, ref) {
@@ -25,10 +29,7 @@ export const PinpadButton = forwardRef<View, PinpadButtonProps>(
     const mode = useSelector(store, (state) => state.context.state.mode);
 
     const disabled = useMemo(() => {
-      if (props.disabled !== undefined) {
-        return props.disabled;
-      }
-      return success || error || loading;
+      return success || error || loading || !!props.disabled;
     }, [error, loading, props.disabled, success]);
 
     const { submitSet, submitCheck, submitReset, submitBiometrics } =
@@ -71,13 +72,16 @@ export const PinpadButton = forwardRef<View, PinpadButtonProps>(
       ]
     );
     return (
-      <Pressable
+      <KeyboardPressable
+        // @ts-expect-error: ref is not a valid prop for View
         ref={ref}
-        onPress={(event) => {
+        // onTouchStart={() => console.log('onTouchStart')}
+        onPress={(e) => {
           handlePinpadPress(value);
-          onPress?.(event);
+          onPress?.(e);
         }}
         {...props}
+        value={value}
         disabled={disabled}
       />
     );

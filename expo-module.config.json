@@ -1,12 +1,17 @@
 {
   "platforms": ["apple", "android", "web"],
   "apple": {
-    "modules": ["VisibilityViewModule", "FadeOutViewModule"]
+    "modules": [
+      "VisibilityViewModule",
+      "FadeOutViewModule",
+      "KeyboardPressableModule"
+    ]
   },
   "android": {
     "modules": [
       "expo.modules.withpincode.VisibilityViewModule",
-      "expo.modules.withpincode.FadeOutViewModule"
+      "expo.modules.withpincode.FadeOutViewModule",
+      "expo.modules.withpincode.KeyboardPressableModule"
     ]
   }
 }

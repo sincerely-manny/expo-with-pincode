@@ -46,7 +46,7 @@ PODS:
     - ExpoModulesCore
   - ExpoSQLite (15.0.5):
     - ExpoModulesCore
-  - ExpoWithPincode (0.1.0):
+  - ExpoWithPincode (1.0.0):
     - ExpoModulesCore
   - FBLazyVector (0.76.5)
   - fmt (9.1.0)
@@ -1930,7 +1930,7 @@ SPEC CHECKSUMS:
   ExpoModulesCore: 9e0b600d2489daaace1e5813f18253ed14bb6e55
   ExpoSecureStore: c9fa9d97af1472ddd579bc319762c1eb704afae9
   ExpoSQLite: 56fc11ea96c93245f16ba6713f90a9e5f45543e9
-  ExpoWithPincode: 46290a3e494e7a09fa2e4f3822f36a784f7abd31
+  ExpoWithPincode: 1e7f55d3e437404cdc56a9d2449b2744bfd20342
   FBLazyVector: 1bf99bb46c6af9a2712592e707347315f23947aa
   fmt: fad7775865bb4340e98e10997c965fd61b3c749e
   glog: 94308668c25e8ccac76f853cda1931c7aa3f5fae
