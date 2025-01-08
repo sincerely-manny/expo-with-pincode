@@ -1,6 +1,6 @@
 import { useSelector } from '@xstate/store/react';
 import { forwardRef, useCallback, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import type { View } from 'react-native';
 import { useLocalAuthentication } from '../hooks/use-local-authentication';
 import { store } from '../store';
 import type { PinpadValue } from '../types';
@@ -14,7 +14,7 @@ type PinpadButtonProps = {
 } & KeyboardPressableProps;
 
 export const PinpadButton = forwardRef<View, PinpadButtonProps>(
-  function PinpadButton({ onPress, value, children, ...props }, ref) {
+  function PinpadButton({ onPress, value, ...props }, ref) {
     const setNextChar = useCallback((char: number) => {
       store.send({ type: 'input.input', char });
     }, []);
@@ -72,21 +72,18 @@ export const PinpadButton = forwardRef<View, PinpadButtonProps>(
       ]
     );
     return (
-      <View {...props} ref={ref}>
-        <KeyboardPressable
-          onPress={(e) => {
-            handlePinpadPress(value);
-            onPress?.(e);
-          }}
-          value={value}
-          disabled={disabled}
-          style={styles.pressable}
-        >
-          {children}
-        </KeyboardPressable>
-      </View>
+      <KeyboardPressable
+        // @ts-expect-error: ref is not a valid prop for View
+        ref={ref}
+        // onTouchStart={() => console.log('onTouchStart')}
+        onPress={(e) => {
+          handlePinpadPress(value);
+          onPress?.(e);
+        }}
+        {...props}
+        value={value}
+        disabled={disabled}
+      />
     );
   }
 );
-
-const styles = StyleSheet.create({ pressable: { flex: 1 } });
