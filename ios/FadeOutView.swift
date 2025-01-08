@@ -26,10 +26,9 @@ class FadeOutView: ExpoView {
 
   private func setupView() {
     clipsToBounds = true
-
-    // Add blur view above all content
     addSubview(blurView)
     blurView.isUserInteractionEnabled = false
+    blurView.layer.zPosition = 10
     NSLayoutConstraint.activate([
       blurView.topAnchor.constraint(equalTo: topAnchor),
       blurView.leadingAnchor.constraint(equalTo: leadingAnchor),

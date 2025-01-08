@@ -1,6 +1,6 @@
 {
   "name": "expo-with-pincode",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Headless UI library for creating a pincode screen in your app.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
