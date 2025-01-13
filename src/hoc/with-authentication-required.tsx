@@ -83,7 +83,7 @@ export function withAuthenticationRequired<P extends JSX.IntrinsicAttributes>(
           onTouchStart={() => renewSession()}
           style={styles.container}
         >
-          {isAuthenticated && <Component {...props} ref={ref} />}
+          {showProtectedScreen && <Component {...props} ref={ref} />}
           <FadeOutView
             style={[
               styles.pinContainer,
